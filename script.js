@@ -1,4 +1,59 @@
-// 데이터 저장소
+// 아이 수정 (개선된 구현)
+function editChild(id) {
+    const child = childrenData.find(c => c.id === id);
+    if (!child) return;
+    
+    // 수정 폼을 모달로 생성
+    const editModal = document.createElement('div');
+    editModal.className = 'modal';
+    editModal.style.display = 'block';
+    
+    editModal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                ✏️ 아이 정보 수정
+                <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>아이 이름</label>
+                    <input type="text" id="editChildName" value="${child.name}" style="font-size: 20px;">
+                </div>
+                <div class="form-group">
+                    <label>등원 시간</label>
+                    <input type="time" id="editGoSchoolTime" value="${child.goSchool.time}" style="font-size: 20px;">
+                </div>
+                <div class="form-group">
+                    <label>등원 장소</label>
+                    <input type="text" id="editGoSchoolLocation" value="${child.goSchool.location}" style="font-size: 20px;">
+                </div>
+                <div class="form-group">
+                    <label>하원 시간</label>
+                    <input type="time" id="editGoHomeTime" value="${child.goHome.time}" style="font-size: 20px;">
+                </div>
+                <div class="form-group">
+                    <label>하원 장소</label>
+                    <input type="text" id="editGoHomeLocation" value="${child.goHome.location}" style="font-size: 20px;">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-success" onclick="saveEditChild(${child.id})">저장</button>
+                    <button class="btn btn-danger" onclick="this.closest('.modal').remove()">취소</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(editModal);
+}
+
+// 수정된 아이 정보 저장
+function saveEditChild(id) {
+    const child = childrenData.find(c => c.id === id);
+    if (!child) return;
+    
+    const name = document.getElementById('editChildName').value.trim();
+    const goSchoolTime = document.getElementById('editGoSchoolTime').value;
+    const go// 데이터 저장소
 let childrenData = [];
 let settings = {
     driverName: '김운전',
@@ -137,11 +192,11 @@ function renderGoSchoolList() {
     
     container.innerHTML = sortedData.map(child => `
         <div class="list-item">
-            <div class="child-name">${child.name}</div>
-            <div class="time-location">
+            <div class="name-time">
+                <div class="child-name">${child.name}</div>
                 <div class="time">오전 ${child.goSchool.time}</div>
-                <div class="location">📍 ${child.goSchool.location}</div>
             </div>
+            <div class="location">📍 ${child.goSchool.location}</div>
         </div>
     `).join('');
 }
@@ -165,11 +220,11 @@ function renderGoHomeList() {
     
     container.innerHTML = sortedData.map(child => `
         <div class="list-item">
-            <div class="child-name">${child.name}</div>
-            <div class="time-location">
+            <div class="name-time">
+                <div class="child-name">${child.name}</div>
                 <div class="time">오후 ${child.goHome.time}</div>
-                <div class="location">📍 ${child.goHome.location}</div>
             </div>
+            <div class="location">📍 ${child.goHome.location}</div>
         </div>
     `).join('');
 }
@@ -189,17 +244,17 @@ function renderManageList() {
     }
     
     container.innerHTML = `
-        <h3 style="margin: 20px 0; color: #2d3748;">등록된 아이들</h3>
+        <h3 style="margin: 20px 0; color: #2d3748; font-size: 20px;">등록된 아이들</h3>
         ${childrenData.map(child => `
             <div class="list-item">
                 <div class="child-name">${child.name}</div>
-                <div style="margin-top: 10px; font-size: 16px; color: #718096;">
+                <div style="margin-top: 10px; font-size: 20px; color: #718096;">
                     <div>등원: ${child.goSchool.time} | ${child.goSchool.location}</div>
                     <div>하원: ${child.goHome.time} | ${child.goHome.location}</div>
                 </div>
                 <div style="margin-top: 15px;">
-                    <button class="btn btn-primary" onclick="editChild(${child.id})" style="margin-right: 10px; font-size: 14px; padding: 8px 15px;">수정</button>
-                    <button class="btn btn-danger" onclick="deleteChild(${child.id})" style="font-size: 14px; padding: 8px 15px;">삭제</button>
+                    <button class="btn btn-primary" onclick="editChild(${child.id})" style="margin-right: 10px; font-size: 18px; padding: 8px 15px;">수정</button>
+                    <button class="btn btn-danger" onclick="deleteChild(${child.id})" style="font-size: 18px; padding: 8px 15px;">삭제</button>
                 </div>
             </div>
         `).join('')}
@@ -242,6 +297,107 @@ function cancelSettings() {
     hideAllForms();
 }
 
+// 커스텀 alert 함수
+function showAlert(message) {
+    // 기존 알림이 있다면 제거
+    const existingAlert = document.querySelector('.custom-alert');
+    if (existingAlert) {
+        existingAlert.remove();
+    }
+    
+    // 새로운 알림 생성
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'custom-alert';
+    alertDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        z-index: 2000;
+        text-align: center;
+        min-width: 300px;
+        max-width: 90%;
+    `;
+    
+    alertDiv.innerHTML = `
+        <div style="font-size: 20px; color: #2d3748; margin-bottom: 20px; line-height: 1.5;">
+            ${message}
+        </div>
+        <button onclick="this.parentElement.remove()" style="
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        ">확인</button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+}
+
+// 커스텀 confirm 함수
+function showConfirm(message, callback) {
+    // 기존 알림이 있다면 제거
+    const existingAlert = document.querySelector('.custom-alert');
+    if (existingAlert) {
+        existingAlert.remove();
+    }
+    
+    // 새로운 확인창 생성
+    const confirmDiv = document.createElement('div');
+    confirmDiv.className = 'custom-alert';
+    confirmDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        z-index: 2000;
+        text-align: center;
+        min-width: 300px;
+        max-width: 90%;
+    `;
+    
+    confirmDiv.innerHTML = `
+        <div style="font-size: 20px; color: #2d3748; margin-bottom: 20px; line-height: 1.5;">
+            ${message}
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button onclick="this.parentElement.parentElement.remove(); (${callback})(true)" style="
+                background: #f56565;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 20px;
+                font-weight: bold;
+                cursor: pointer;
+            ">확인</button>
+            <button onclick="this.parentElement.parentElement.remove()" style="
+                background: #718096;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 20px;
+                font-weight: bold;
+                cursor: pointer;
+            ">취소</button>
+        </div>
+    `;
+    
+    document.body.appendChild(confirmDiv);
+}
 // 아이 저장
 function saveChild() {
     const name = document.getElementById('childName').value.trim();
@@ -251,7 +407,7 @@ function saveChild() {
     const goHomeLocation = document.getElementById('goHomeLocation').value.trim();
     
     if (!name || !goSchoolLocation || !goHomeLocation) {
-        alert('모든 필드를 입력해주세요.');
+        showAlert('모든 필드를 입력해주세요.');
         return;
     }
     
@@ -266,7 +422,7 @@ function saveChild() {
     saveData();
     hideAllForms();
     renderManageList();
-    alert('아이 정보가 저장되었습니다.');
+    showAlert('아이 정보가 저장되었습니다.');
 }
 
 // 설정 저장
@@ -275,7 +431,7 @@ function saveSettings() {
     const busNumber = document.getElementById('settingBusNumber').value.trim();
     
     if (!driverName || !busNumber) {
-        alert('모든 필드를 입력해주세요.');
+        showAlert('모든 필드를 입력해주세요.');
         return;
     }
     
@@ -284,17 +440,19 @@ function saveSettings() {
     saveData();
     updateDriverInfo();
     hideAllForms();
-    alert('설정이 저장되었습니다.');
+    showAlert('설정이 저장되었습니다.');
 }
 
 // 아이 삭제
 function deleteChild(id) {
-    if (confirm('정말로 삭제하시겠습니까?')) {
-        childrenData = childrenData.filter(child => child.id !== id);
-        saveData();
-        renderManageList();
-        alert('삭제되었습니다.');
-    }
+    showConfirm('정말로 삭제하시겠습니까?', function(confirmed) {
+        if (confirmed) {
+            childrenData = childrenData.filter(child => child.id !== id);
+            saveData();
+            renderManageList();
+            showAlert('삭제되었습니다.');
+        }
+    });
 }
 
 // 아이 수정 (간단한 구현)
