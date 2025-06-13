@@ -16,6 +16,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if ('wakeLock' in navigator) {
         navigator.wakeLock.request('screen');
     }
+    
+    // Service Worker 등록 (PWA)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+                console.log('Service Worker 등록 성공:', registration);
+            })
+            .catch(function(error) {
+                console.log('Service Worker 등록 실패:', error);
+            });
+    }
 });
 
 // 데이터 로드
