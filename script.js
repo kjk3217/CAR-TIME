@@ -455,35 +455,80 @@ function deleteChild(id) {
     });
 }
 
-// 아이 수정 (간단한 구현)
+// 아이 수정 (개선된 구현)
 function editChild(id) {
     const child = childrenData.find(c => c.id === id);
     if (!child) return;
     
-    const newName = prompt('이름:', child.name);
-    if (newName === null) return;
+    // 수정 폼을 모달로 생성
+    const editModal = document.createElement('div');
+    editModal.className = 'modal';
+    editModal.style.display = 'block';
     
-    const newGoSchoolTime = prompt('등원 시간 (HH:MM):', child.goSchool.time);
-    if (newGoSchoolTime === null) return;
+    editModal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                ✏️ 아이 정보 수정
+                <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>아이 이름</label>
+                    <input type="text" id="editChildName" value="${child.name}" style="font-size: 20px;">
+                </div>
+                <div class="form-group">
+                    <label>등원 시간</label>
+                    <input type="time" id="editGoSchoolTime" value="${child.goSchool.time}" style="font-size: 20px;">
+                </div>
+                <div class="form-group">
+                    <label>등원 장소</label>
+                    <input type="text" id="editGoSchoolLocation" value="${child.goSchool.location}" style="font-size: 20px;">
+                </div>
+                <div class="form-group">
+                    <label>하원 시간</label>
+                    <input type="time" id="editGoHomeTime" value="${child.goHome.time}" style="font-size: 20px;">
+                </div>
+                <div class="form-group">
+                    <label>하원 장소</label>
+                    <input type="text" id="editGoHomeLocation" value="${child.goHome.location}" style="font-size: 20px;">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-success" onclick="saveEditChild(${child.id})">저장</button>
+                    <button class="btn btn-danger" onclick="this.closest('.modal').remove()">취소</button>
+                </div>
+            </div>
+        </div>
+    `;
     
-    const newGoSchoolLocation = prompt('등원 장소:', child.goSchool.location);
-    if (newGoSchoolLocation === null) return;
+    document.body.appendChild(editModal);
+}
+
+// 수정된 아이 정보 저장
+function saveEditChild(id) {
+    const child = childrenData.find(c => c.id === id);
+    if (!child) return;
     
-    const newGoHomeTime = prompt('하원 시간 (HH:MM):', child.goHome.time);
-    if (newGoHomeTime === null) return;
+    const name = document.getElementById('editChildName').value.trim();
+    const goSchoolTime = document.getElementById('editGoSchoolTime').value;
+    const goSchoolLocation = document.getElementById('editGoSchoolLocation').value.trim();
+    const goHomeTime = document.getElementById('editGoHomeTime').value;
+    const goHomeLocation = document.getElementById('editGoHomeLocation').value.trim();
     
-    const newGoHomeLocation = prompt('하원 장소:', child.goHome.location);
-    if (newGoHomeLocation === null) return;
+    if (!name || !goSchoolLocation || !goHomeLocation) {
+        showAlert('모든 필드를 입력해주세요.');
+        return;
+    }
     
-    child.name = newName.trim();
-    child.goSchool.time = newGoSchoolTime;
-    child.goSchool.location = newGoSchoolLocation.trim();
-    child.goHome.time = newGoHomeTime;
-    child.goHome.location = newGoHomeLocation.trim();
+    child.name = name;
+    child.goSchool.time = goSchoolTime;
+    child.goSchool.location = goSchoolLocation;
+    child.goHome.time = goHomeTime;
+    child.goHome.location = goHomeLocation;
     
     saveData();
     renderManageList();
-    alert('수정되었습니다.');
+    document.querySelector('.modal').remove();
+    showAlert('수정되었습니다.');
 }
 
 // 모달 외부 클릭시 닫기
