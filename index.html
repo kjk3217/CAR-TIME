@@ -87,8 +87,10 @@
             font-size: 28px;
             font-weight: bold;
             color: #667eea;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .date-time {
@@ -102,6 +104,22 @@
             font-size: 24px;
             font-weight: bold;
             color: #2d3748;
+        }
+
+        /* 하단 정보 */
+        .footer {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .app-version {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4a5568;
         }
 
         /* 메인 버튼 영역 */
@@ -298,7 +316,7 @@
         }
 
         .location {
-            font-size: 24px;
+            font-size: 25px;
             color: #718096;
             font-weight: bold;
             padding-left: 5px;
@@ -484,6 +502,11 @@
             </button>
         </div>
 
+        <!-- 하단 정보 -->
+        <div class="footer">
+            <div class="app-version">수서서머힐 차량 시간표 앱 V1</div>
+        </div>
+
     </div>
 
     <!-- 등원 모달 -->
@@ -514,7 +537,7 @@
 
     <!-- 관리 모달 -->
     <div id="manageModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content fullscreen">
             <div class="modal-header">
                 ⚙️ 아이 정보 관리
                 <span class="close" onclick="closeModal()">&times;</span>
@@ -523,11 +546,10 @@
                 <div class="manage-buttons">
                     <button class="btn btn-primary" onclick="showAddForm()">아이 추가</button>
                     <button class="btn btn-success" onclick="showFileUpload()">파일 업로드</button>
-                    <button class="btn btn-danger" onclick="showSettings()">설정</button>
                 </div>
                 
                 <div id="addForm" style="display: none;">
-                    <h3 style="margin-bottom: 20px; color: #2d3748;">새 아이 추가</h3>
+                    <h3 style="margin-bottom: 20px; color: #2d3748; font-size: 24px;">새 아이 추가</h3>
                     <div class="form-group">
                         <label for="childName">아이 이름</label>
                         <input type="text" id="childName" placeholder="이름을 입력하세요">
@@ -555,43 +577,14 @@
                 </div>
 
                 <div id="fileUploadForm" style="display: none;">
-                    <h3 style="margin-bottom: 20px; color: #2d3748; font-size: 20px;">파일로 일괄 업데이트</h3>
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                        <h4 style="margin-bottom: 15px; color: #4a5568; font-size: 18px;">📄 파일 형식 안내</h4>
-                        <div style="font-size: 16px; color: #718096; line-height: 1.6;">
-                            <p style="margin-bottom: 10px;"><strong>텍스트 파일(.txt)</strong>로 준비해주세요.</p>
-                            <p style="margin-bottom: 10px;"><strong>한 줄에 한 명씩</strong> 다음 형식으로 작성:</p>
-                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; font-family: monospace; font-size: 14px;">
-                                이름,등원시간,등원장소,하원시간,하원장소<br>
-                                김민수,08:30,아파트 정문,14:30,아파트 정문<br>
-                                이하늘,08:35,놀이터,14:35,놀이터
-                            </div>
-                            <p style="color: #e53e3e; font-weight: bold;">⚠️ 기존 데이터는 모두 삭제되고 새 데이터로 교체됩니다!</p>
-                        </div>
-                    </div>
+                    <h3 style="margin-bottom: 20px; color: #2d3748; font-size: 24px;">파일로 일괄 업데이트</h3>
                     <div class="form-group">
                         <label for="fileInput">텍스트 파일 선택</label>
-                        <input type="file" id="fileInput" accept=".txt" style="font-size: 18px; padding: 10px;">
+                        <input type="file" id="fileInput" accept=".txt" style="font-size: 20px; padding: 15px;">
                     </div>
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
                         <button class="btn btn-success" onclick="uploadFile()">업로드</button>
                         <button class="btn btn-danger" onclick="cancelFileUpload()">취소</button>
-                    </div>
-                </div>
-
-                <div id="settingsForm" style="display: none;">
-                    <h3 style="margin-bottom: 20px; color: #2d3748;">기본 설정</h3>
-                    <div class="form-group">
-                        <label for="settingDriverName">운전기사 이름</label>
-                        <input type="text" id="settingDriverName" placeholder="기사님 이름">
-                    </div>
-                    <div class="form-group">
-                        <label for="settingBusNumber">차량 번호</label>
-                        <input type="text" id="settingBusNumber" placeholder="차량 번호">
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button class="btn btn-success" onclick="saveSettings()">저장</button>
-                        <button class="btn btn-danger" onclick="cancelSettings()">취소</button>
                     </div>
                 </div>
 
@@ -810,11 +803,11 @@
             }
             
             container.innerHTML = `
-                <h3 style="margin: 20px 0; color: #2d3748; font-size: 20px;">등록된 아이들</h3>
+                <h3 style="margin: 20px 0; color: #2d3748; font-size: 24px;">등록된 아이들</h3>
                 ${childrenData.map(child => `
                     <div class="list-item">
                         <div class="child-name">${child.name}</div>
-                        <div style="margin-top: 10px; font-size: 20px; color: #718096;">
+                        <div style="margin-top: 10px; font-size: 24px; color: #718096;">
                             <div>등원: ${child.goSchool.time} | ${child.goSchool.location}</div>
                             <div>하원: ${child.goHome.time} | ${child.goHome.location}</div>
                         </div>
@@ -831,7 +824,6 @@
         function hideAllForms() {
             document.getElementById('addForm').style.display = 'none';
             document.getElementById('fileUploadForm').style.display = 'none';
-            document.getElementById('settingsForm').style.display = 'none';
         }
 
         function showAddForm() {
@@ -844,13 +836,6 @@
             hideAllForms();
             document.getElementById('fileUploadForm').style.display = 'block';
             document.getElementById('fileInput').value = '';
-        }
-
-        function showSettings() {
-            hideAllForms();
-            document.getElementById('settingsForm').style.display = 'block';
-            document.getElementById('settingDriverName').value = settings.driverName;
-            document.getElementById('settingBusNumber').value = settings.busNumber;
         }
 
         function clearAddForm() {
@@ -869,10 +854,6 @@
         function cancelFileUpload() {
             hideAllForms();
             renderManageList();
-        }
-
-        function cancelSettings() {
-            hideAllForms();
         }
 
         // 파일 업로드 처리
@@ -1092,23 +1073,8 @@
             showAlert('아이 정보가 저장되었습니다.');
         }
 
-        // 설정 저장
-        function saveSettings() {
-            const driverName = document.getElementById('settingDriverName').value.trim();
-            const busNumber = document.getElementById('settingBusNumber').value.trim();
-            
-            if (!driverName || !busNumber) {
-                showAlert('모든 필드를 입력해주세요.');
-                return;
-            }
-            
-            settings.driverName = driverName;
-            settings.busNumber = busNumber;
-            saveData();
-            updateDriverInfo();
-            hideAllForms();
-            showAlert('설정이 저장되었습니다.');
-        }
+        // 설정 저장 (제거됨)
+        // function saveSettings() - 더 이상 사용하지 않음
 
         // 아이 삭제
         function deleteChild(id) {
@@ -1131,7 +1097,7 @@
             editModal.style.display = 'block';
             
             editModal.innerHTML = `
-                <div class="modal-content">
+                <div class="modal-content fullscreen">
                     <div class="modal-header">
                         ✏️ 아이 정보 수정
                         <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
