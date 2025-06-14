@@ -222,37 +222,38 @@
         }
 
         .schedule-item {
-            padding: 15px 0;
+            padding: 20px 0;
             border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         .schedule-item:last-child {
             border-bottom: none;
         }
 
-        .schedule-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
         .schedule-name {
             font-size: 33px;
             font-weight: 700;
             color: white;
+            flex: 0 0 auto;
         }
 
         .schedule-time {
             font-size: 33px;
             font-weight: 700;
             color: #FFE066;
+            flex: 0 0 auto;
         }
 
         .schedule-location {
             font-size: 33px;
             font-weight: 700;
             color: #FFB6C1;
+            flex: 1;
+            text-align: right;
         }
 
         .manage-item {
@@ -969,10 +970,8 @@
                 const timeFormatted = formatTime(schedule.time);
                 return `
                     <div class="schedule-item">
-                        <div class="schedule-header">
-                            <div class="schedule-name">${schedule.name}</div>
-                            <div class="schedule-time">${timeFormatted}</div>
-                        </div>
+                        <div class="schedule-name">${schedule.name}</div>
+                        <div class="schedule-time">${timeFormatted}</div>
                         <div class="schedule-location">${schedule.location}</div>
                     </div>
                 `;
