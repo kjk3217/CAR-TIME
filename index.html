@@ -890,7 +890,7 @@
             `).join('');
         }
 
-        // 관리 리스트 렌더링
+        // 관리 리스트 렌더링 (수정됨)
         function renderManageList() {
             const container = document.getElementById('childrenList');
             
@@ -914,12 +914,34 @@
                             <div>하원: ${child.goHome.time} | ${child.goHome.location}</div>
                         </div>
                         <div style="margin-top: 15px;">
-                            <button class="btn btn-primary" onclick="editChild(${child.id})" style="margin-right: 10px; font-size: 18px; padding: 8px 15px;">수정</button>
-                            <button class="btn btn-danger" onclick="deleteChild(${child.id})" style="font-size: 18px; padding: 8px 15px;">삭제</button>
+                            <button class="btn btn-primary child-edit-btn" data-child-id="${child.id}" style="margin-right: 10px; font-size: 18px; padding: 8px 15px;">수정</button>
+                            <button class="btn btn-danger child-delete-btn" data-child-id="${child.id}" style="font-size: 18px; padding: 8px 15px;">삭제</button>
                         </div>
                     </div>
                 `).join('')}
             `;
+            
+            // 이벤트 리스너 추가
+            addChildManagementListeners();
+        }
+
+        // 아이 관리 버튼 이벤트 리스너 추가
+        function addChildManagementListeners() {
+            // 수정 버튼들
+            document.querySelectorAll('.child-edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const childId = parseInt(this.getAttribute('data-child-id'));
+                    editChild(childId);
+                });
+            });
+            
+            // 삭제 버튼들
+            document.querySelectorAll('.child-delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const childId = parseInt(this.getAttribute('data-child-id'));
+                    deleteChild(childId);
+                });
+            });
         }
 
         // 폼 표시/숨김 관련 함수들
@@ -1275,20 +1297,51 @@
         // 설정 저장 (제거됨)
         // function saveSettings() - 더 이상 사용하지 않음
 
-        // 아이 삭제
+        // 아이 삭제 (개선됨)
         function deleteChild(id) {
-            showConfirm('정말로 삭제하시겠습니까?', function() {
-                childrenData = childrenData.filter(child => child.id !== id);
+            console.log('삭제 요청된 아이 ID:', id); // 디버깅용
+            
+            const child = childrenData.find(c => c.id === id);
+            if (!child) {
+                console.error('아이를 찾을 수 없습니다. ID:', id);
+                showAlert('삭제할 아이를 찾을 수 없습니다.');
+                return;
+            }
+            
+            console.log('삭제할 아이:', child.name); // 디버깅용
+            
+            showConfirm(`${child.name} 아이의 정보를 정말로 삭제하시겠습니까?`, function() {
+                // 데이터에서 제거
+                const originalLength = childrenData.length;
+                childrenData = childrenData.filter(c => c.id !== id);
+                
+                console.log(`삭제 전: ${originalLength}명, 삭제 후: ${childrenData.length}명`); // 디버깅용
+                
+                if (childrenData.length === originalLength) {
+                    console.error('삭제가 실행되지 않았습니다.');
+                    showAlert('삭제에 실패했습니다.');
+                    return;
+                }
+                
+                // 데이터 저장 및 화면 업데이트
                 saveData();
                 renderManageList();
-                showAlert('삭제되었습니다.');
+                showAlert(`${child.name} 아이의 정보가 삭제되었습니다.`);
             });
         }
 
-        // 아이 수정 (애니메이션 적용)
+        // 아이 수정 (개선됨)
         function editChild(id) {
+            console.log('수정 요청된 아이 ID:', id); // 디버깅용
+            
             const child = childrenData.find(c => c.id === id);
-            if (!child) return;
+            if (!child) {
+                console.error('아이를 찾을 수 없습니다. ID:', id);
+                showAlert('수정할 아이를 찾을 수 없습니다.');
+                return;
+            }
+            
+            console.log('수정할 아이:', child.name); // 디버깅용
             
             // 수정 폼을 모달로 생성
             const editModal = document.createElement('div');
@@ -1298,7 +1351,7 @@
             editModal.innerHTML = `
                 <div class="modal-content fullscreen">
                     <div class="modal-header">
-                        ✏️ 아이 정보 수정
+                        ✏️ ${child.name} 정보 수정
                         <span class="close" onclick="closeEditModal(this.closest('.modal'))">&times;</span>
                     </div>
                     <div class="modal-body">
