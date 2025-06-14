@@ -24,14 +24,16 @@
             overscroll-behavior: none;
             min-height: 100vh;
             position: relative;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            padding: 20px;
-            gap: 20px;
+            padding: 10px;
+            gap: 15px;
         }
 
         .header {
@@ -144,13 +146,13 @@
 
         .modal-content {
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             right: 0;
+            bottom: 0;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 25px 25px 0 0;
-            padding: 20px;
-            max-height: 90vh;
+            border-radius: 0;
+            padding: 15px;
             overflow-y: auto;
             transform: translateY(100%);
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -164,8 +166,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 2px solid rgba(255, 255, 255, 0.2);
         }
 
@@ -197,55 +199,56 @@
         .schedule-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
         }
 
         .schedule-item {
             backdrop-filter: blur(20px);
             background: rgba(255, 255, 255, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 15px;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 2fr 1.5fr 2fr;
             gap: 10px;
             align-items: center;
-            min-height: 70px;
+            min-height: 60px;
         }
 
         .schedule-name {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
         }
 
         .schedule-time {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
             text-align: center;
             color: #FFE066;
         }
 
         .schedule-location {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             text-align: right;
             opacity: 0.9;
         }
 
-        .add-btn {
+        .add-btn-top {
             background: linear-gradient(135deg, #2ECC71, #27AE60);
             border: none;
             color: white;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 15px 25px;
+            border-radius: 12px;
             cursor: pointer;
-            margin-top: 20px;
             transition: all 0.1s ease;
+            margin-bottom: 15px;
+            width: 100%;
         }
 
-        .add-btn:active {
+        .add-btn-top:active {
             transform: scale(0.98);
         }
 
@@ -344,17 +347,17 @@
         }
 
         .empty-state h3 {
-            font-size: 22px;
-            margin-bottom: 10px;
+            font-size: 26px;
+            margin-bottom: 15px;
         }
 
         .empty-state p {
-            font-size: 18px;
+            font-size: 22px;
         }
 
         @media (max-width: 480px) {
             .container {
-                padding: 15px;
+                padding: 8px;
             }
             
             .app-title {
@@ -368,13 +371,21 @@
             }
             
             .schedule-item {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 5px;
+                grid-template-columns: 2fr 1.5fr 2fr;
+                padding: 12px;
+                min-height: 55px;
             }
             
-            .schedule-time, .schedule-location {
-                text-align: center;
+            .schedule-name {
+                font-size: 18px;
+            }
+            
+            .schedule-time {
+                font-size: 16px;
+            }
+            
+            .schedule-location {
+                font-size: 14px;
             }
         }
     </style>
@@ -432,8 +443,8 @@
                 <h2 class="modal-title">⚙️ 스케줄 관리</h2>
                 <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
+            <button class="add-btn-top" onclick="showAddForm()">+ 새 스케줄 추가</button>
             <div id="manageList" class="schedule-list"></div>
-            <button class="add-btn" onclick="showAddForm()">+ 새 스케줄 추가</button>
         </div>
     </div>
 
