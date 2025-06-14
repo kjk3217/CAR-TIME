@@ -2,11 +2,21 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="서머힐 붕붕버스">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#667eea">
+    <meta name="msapplication-navbutton-color" content="#667eea">
+    <meta name="apple-touch-fullscreen" content="yes">
     <title>서머힐 붕붕버스</title>
+    
+    <!-- PWA 매니페스트 -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIuyEnOuojO2esCDssKXrnZ0g7Iuc6rCE7ZWcIOyVsSDrsLDsnak1IiwKICAic2hvcnRfbmFtZSI6ICLshJzrqIztnoAg67Kcm67rsoXsiqQiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImZ1bGxzY3JlZW4iOiAidHJ1ZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzY2N2VlYSIsCiAgInRoZW1lX2NvbG9yIjogIiM2NjdlZWEiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU1USTRJaUJvWldsbmFIUTlJakV5T0NJZ2RtbGxkMEp2ZUQwaU1DQXdJREV5T0NBeU9EZ2lJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStQR1psUFFwelBIQmhkR2dnWkQwaVR6RTFMalF6TVN3eE5pNHhPR005VERZNUxqWTFOU3d6TVM0MU15QkRNemN1TXprMkxESTNMalkwTXlBeE5TNHhNek1zTXpFeUxqTXpOaUJzTFRZNUxqSTFOU3d6TVM0MU16QkRORGN1TnpZNUxESTNMalkwTXlBNE9TNHdNems1TERnek5pNHlNVGtnTVRVMExqUXpNU3d6TWpCTU1qRTVMalV6T1N3ek16UXVOelJqTVRZdU1EUXpMV1UzTGpZeE1TQXpNUzQyTURNc01qQXVOakEwSUVjOEwzQmhkR2crUEdOcGNtTnNaU0JqZUQwaU56UWlJR041UFNJeE5EUWlJSEk5SWpRMElpQm1hV3hzUFNJalJqWkJNREFpTHo0OEwzTjJaejQ9IiwKICAgICAgInNpemVzIjogIjEyOHgxMjgiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
+    
+    <!-- 애플 아이콘 -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAyODgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGZlPQpzPHBhdGggZD0iTzE1LjQzMSwxNi4xOEw5LjY1NSwzMS41MyBDMzcuMzk2LDI3LjY0MywxNS4xMzMsMzEyLjMzNiBsLTY5LjI1NSwzMS41M0NONDQ3LjY5LDI3LjY0Myw4OS4wMzk5LDgzNi4yMTkgMTU0LjQzMSwzMjBMMjE5LjUzOSwzMzQ3NGMxNi4wNDMtZTcuNjExIDMxLjYwMywyMC42MDQgRz04L3BhdGg+PGNpcmNsZSBjeD0iNzQiIGN5PSIxNDQiIHI9IjQ0IiBmaWxsPSIjRjZBMDAiLz48L3N2Zz4=">
     
     <style>
         * {
@@ -23,15 +33,20 @@
             overflow-x: hidden;
             overscroll-behavior: none;
             min-height: 100vh;
+            min-height: 100dvh; /* 동적 뷰포트 높이 */
             position: relative;
             margin: 0;
             padding: 0;
+            /* 주소창 숨기기 강제 설정 */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         .container {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            min-height: 100dvh; /* 동적 뷰포트 높이 */
             padding: 10px;
             gap: 15px;
         }
@@ -216,7 +231,7 @@
         }
 
         .schedule-name {
-            font-size: 27px;
+            font-size: 33px;
             font-weight: 700;
             grid-column: 1;
             grid-row: 1;
@@ -224,7 +239,7 @@
         }
 
         .schedule-time {
-            font-size: 27px;
+            font-size: 33px;
             font-weight: 700;
             color: #FFE066;
             grid-column: 2;
@@ -233,7 +248,7 @@
         }
 
         .schedule-location {
-            font-size: 27px;
+            font-size: 33px;
             font-weight: 700;
             color: #FFB6C1;
             grid-column: 1 / -1;
@@ -254,7 +269,7 @@
         }
 
         .manage-name {
-            font-size: 25px;
+            font-size: 33px;
             font-weight: 700;
             flex: 1;
         }
@@ -342,14 +357,14 @@
         }
 
         .action-btn {
-            padding: 12px 20px;
-            font-size: 18px;
+            padding: 15px 25px;
+            font-size: 30px;
             font-weight: 700;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.1s ease;
-            min-width: 70px;
+            min-width: 90px;
         }
 
         .action-btn.edit {
@@ -631,9 +646,9 @@
             }
 
             .action-btn {
-                padding: 10px 16px;
-                font-size: 16px;
-                min-width: 60px;
+                padding: 12px 20px;
+                font-size: 28px;
+                min-width: 80px;
             }
 
             .manage-name {
@@ -777,8 +792,75 @@
         let currentTimeType = ''; // 'arrival' 또는 'departure'
         let selectedPeriod = 'AM';
 
-        // 초기화
+        // 서비스 워커 등록 (PWA를 위한 캐싱)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('data:text/javascript;base64,Ly8gQmFzaWMgc2VydmljZSB3b3JrZXIgZm9yIFBXQQpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2luc3RhbGwnLCBldmVudCA9PiB7CiAgc2VsZi5za2lwV2FpdGluZygpOwp9KTsKCnNlbGYuYWRkRXZlbnRMaXN0ZW5lcignYWN0aXZhdGUnLCBldmVudCA9PiB7CiAgZXZlbnQud2FpdFVudGlsKHNlbGYuY2xpZW50cy5jbGFpbSgpKTsKfSk7CgpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZXZlbnQgPT4gewogIGV2ZW50LnJlc3BvbmRXaXRoKGZldGNoKGV2ZW50LnJlcXVlc3QpKTsKfSk7')
+                .then(registration => {
+                    console.log('ServiceWorker registered successfully');
+                })
+                .catch(error => {
+                    console.log('ServiceWorker registration failed: ', error);
+                });
+            });
+        }
+
+        // PWA 설치 프롬프트 처리
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('PWA install prompt available');
+        });
+
+        // iOS PWA 감지 및 전체화면 확인
+        function checkPWAMode() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isStandalone = window.navigator.standalone;
+            const isAndroidPWA = window.matchMedia('(display-mode: standalone)').matches || 
+                                  window.matchMedia('(display-mode: fullscreen)').matches;
+            
+            if (isIOS && isStandalone) {
+                console.log('iOS PWA mode detected');
+                document.body.style.paddingTop = '0';
+                // iOS에서 주소창 완전히 숨기기
+                setTimeout(() => {
+                    window.scrollTo(0, 1);
+                }, 100);
+            } else if (isAndroidPWA) {
+                console.log('Android PWA mode detected');
+                document.body.style.paddingTop = '0';
+            } else {
+                console.log('Browser mode - not PWA');
+                // 브라우저 모드에서도 주소창 숨기기 시도
+                hideAddressBar();
+            }
+        }
+
+        // 주소창 숨기기 함수
+        function hideAddressBar() {
+            setTimeout(() => {
+                window.scrollTo(0, 1);
+            }, 500);
+            
+            // 리사이즈 이벤트에서도 실행
+            window.addEventListener('orientationchange', () => {
+                setTimeout(() => {
+                    window.scrollTo(0, 1);
+                }, 500);
+            });
+            
+            window.addEventListener('resize', () => {
+                setTimeout(() => {
+                    window.scrollTo(0, 1);
+                }, 100);
+            });
+        }
+
+        // 초기화 시 PWA 모드 확인
         document.addEventListener('DOMContentLoaded', function() {
+            checkPWAMode();
+            hideAddressBar(); // 페이지 로드 시 즉시 실행
             updateDateTime();
             setInterval(updateDateTime, 1000);
             
