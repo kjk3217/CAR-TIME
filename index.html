@@ -234,6 +234,47 @@
             border-bottom: none;
         }
 
+        .schedule-item.checked {
+            opacity: 0.6;
+            background: rgba(46, 213, 115, 0.2);
+            border-radius: 10px;
+            padding: 20px 10px;
+        }
+
+        .schedule-checkbox {
+            width: 35px;
+            height: 35px;
+            border: 3px solid #FFE066;
+            border-radius: 8px;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .schedule-checkbox.checked {
+            background: #2ECC71;
+            border-color: #2ECC71;
+        }
+
+        .schedule-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .schedule-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+
         .schedule-name {
             font-size: 33px !important;
             font-weight: 700;
@@ -650,9 +691,30 @@
             
             .schedule-item {
                 padding: 15px 0;
+                flex-direction: row;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .schedule-item.checked {
+                padding: 15px 8px;
+            }
+
+            .schedule-checkbox {
+                width: 30px;
+                height: 30px;
+                border-width: 2px;
+            }
+
+            .schedule-checkbox.checked::after {
+                font-size: 20px;
+            }
+
+            .schedule-info {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px;
+                flex: 1;
             }
             
             .schedule-name {
@@ -825,6 +887,7 @@
         let editingChild = null;
         let currentTimeType = '';
         let selectedPeriod = 'AM';
+        let checkData = {}; // 체크 상태 저장
 
         // 로컬스토리지에서 데이터 로드
         function loadFromStorage() {
@@ -837,9 +900,59 @@
                     console.log('저장된 데이터 없음, 샘플 데이터 생성');
                     createSampleData();
                 }
+
+                // 체크 데이터 로드
+                const storedChecks = localStorage.getItem('summerhill_bus_checks');
+                if (storedChecks) {
+                    checkData = JSON.parse(storedChecks);
+                    console.log('체크 데이터 로드됨');
+                } else {
+                    checkData = {};
+                }
+
+                // 날짜 확인 및 체크 데이터 초기화
+                checkDailyReset();
             } catch (error) {
                 console.error('데이터 로드 실패:', error);
                 createSampleData();
+            }
+        }
+
+        // 체크 데이터 저장
+        function saveCheckData() {
+            try {
+                localStorage.setItem('summerhill_bus_checks', JSON.stringify(checkData));
+                console.log('체크 데이터 저장됨');
+            } catch (error) {
+                console.error('체크 데이터 저장 실패:', error);
+            }
+        }
+
+        // 일일 체크 데이터 초기화
+        function checkDailyReset() {
+            const today = new Date().toDateString();
+            const lastDate = localStorage.getItem('summerhill_last_date');
+            
+            if (lastDate !== today) {
+                // 새로운 날이면 체크 데이터 초기화
+                checkData = {};
+                localStorage.setItem('summerhill_last_date', today);
+                saveCheckData();
+                console.log('새로운 날 - 체크 데이터 초기화됨');
+            }
+        }
+
+        // 체크 상태 토글
+        function toggleCheck(name, type) {
+            const key = `${name}_${type}`;
+            checkData[key] = !checkData[key];
+            saveCheckData();
+            
+            // 해당 타입의 리스트만 다시 렌더링
+            if (type === 'arrival') {
+                renderScheduleList('arrival', 'arrivalList');
+            } else {
+                renderScheduleList('departure', 'departureList');
             }
         }
 
@@ -923,6 +1036,9 @@
             loadFromStorage();
             updateDateTime();
             setInterval(updateDateTime, 1000);
+            
+            // 1시간마다 날짜 체크 (자정 넘어갈 때 대비)
+            setInterval(checkDailyReset, 60 * 60 * 1000);
         });
 
         // 시간 업데이트
@@ -986,11 +1102,17 @@
 
             container.innerHTML = filteredSchedules.map(schedule => {
                 const timeFormatted = formatTime(schedule.time);
+                const checkKey = `${schedule.name}_${schedule.type}`;
+                const isChecked = checkData[checkKey] || false;
+                
                 return `
-                    <div class="schedule-item">
-                        <div class="schedule-name">${schedule.name}</div>
-                        <div class="schedule-time">${timeFormatted}</div>
-                        <div class="schedule-location">${schedule.location}</div>
+                    <div class="schedule-item ${isChecked ? 'checked' : ''}" onclick="toggleCheck('${schedule.name}', '${schedule.type}')">
+                        <div class="schedule-checkbox ${isChecked ? 'checked' : ''}"></div>
+                        <div class="schedule-info">
+                            <div class="schedule-name">${schedule.name}</div>
+                            <div class="schedule-time">${timeFormatted}</div>
+                            <div class="schedule-location">${schedule.location}</div>
+                        </div>
                     </div>
                 `;
             }).join('');
