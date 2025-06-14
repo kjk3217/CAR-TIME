@@ -46,14 +46,14 @@
         }
 
         .app-title {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 800;
             margin-bottom: 15px;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .date-time {
-            font-size: 22px;
+            font-size: 26px;
             font-weight: 600;
             opacity: 0.9;
         }
@@ -111,13 +111,13 @@
         }
 
         .btn.manage {
-            background: linear-gradient(135deg, rgba(155, 89, 182, 0.8), rgba(142, 68, 173, 0.8));
-            border-color: rgba(155, 89, 182, 0.9);
-            box-shadow: 0 8px 25px rgba(155, 89, 182, 0.3);
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.8), rgba(255, 152, 0, 0.8));
+            border-color: rgba(255, 193, 7, 0.9);
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
         }
 
         .btn.manage:active {
-            background: linear-gradient(135deg, rgba(155, 89, 182, 0.9), rgba(142, 68, 173, 0.9));
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.9), rgba(255, 152, 0, 0.9));
         }
 
         .footer {
@@ -209,29 +209,35 @@
             border-radius: 12px;
             padding: 15px;
             display: grid;
-            grid-template-columns: 2fr 1.5fr 2fr;
-            gap: 10px;
-            align-items: center;
-            min-height: 60px;
+            grid-template-columns: 3fr 2fr;
+            grid-template-rows: auto auto;
+            gap: 8px;
+            min-height: 70px;
         }
 
         .schedule-name {
             font-size: 25px;
             font-weight: 700;
+            grid-column: 1;
+            grid-row: 1;
         }
 
         .schedule-time {
             font-size: 25px;
             font-weight: 600;
-            text-align: center;
             color: #FFE066;
+            grid-column: 2;
+            grid-row: 1;
+            text-align: right;
         }
 
         .schedule-location {
-            font-size: 25px;
+            font-size: 22px;
             font-weight: 500;
-            text-align: right;
             opacity: 0.9;
+            grid-column: 1 / -1;
+            grid-row: 2;
+            padding-top: 5px;
         }
 
         .manage-item {
@@ -373,13 +379,97 @@
             font-size: 22px;
         }
 
+        /* 커스텀 알림 팝업 */
+        .alert-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .alert-modal.show {
+            opacity: 1;
+        }
+
+        .alert-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            min-width: 320px;
+            max-width: 90vw;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .alert-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .alert-message {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .alert-btn {
+            background: linear-gradient(135deg, #2ECC71, #27AE60);
+            border: none;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            min-width: 120px;
+        }
+
+        .alert-btn:active {
+            transform: scale(0.98);
+        }
+
+        .alert-btn.danger {
+            background: linear-gradient(135deg, #E74C3C, #C0392B);
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .alert-btn.cancel {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 8px;
             }
             
             .app-title {
-                font-size: 28px;
+                font-size: 32px;
+            }
+
+            .date-time {
+                font-size: 24px;
             }
             
             .btn {
@@ -389,9 +479,9 @@
             }
             
             .schedule-item {
-                grid-template-columns: 2fr 1.5fr 2fr;
+                grid-template-columns: 3fr 2fr;
                 padding: 12px;
-                min-height: 55px;
+                min-height: 65px;
             }
             
             .schedule-name {
@@ -403,7 +493,7 @@
             }
             
             .schedule-location {
-                font-size: 22px;
+                font-size: 20px;
             }
 
             .manage-name {
@@ -500,6 +590,17 @@
             <div class="form-buttons">
                 <button class="form-btn cancel" onclick="closeFormModal()">취소</button>
                 <button class="form-btn save" onclick="saveSchedule()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 커스텀 알림 모달 -->
+    <div id="alertModal" class="alert-modal">
+        <div class="alert-content">
+            <span id="alertIcon" class="alert-icon">ℹ️</span>
+            <div id="alertMessage" class="alert-message">알림 메시지</div>
+            <div id="alertButtons" class="confirm-buttons">
+                <button class="alert-btn" onclick="closeAlert()">확인</button>
             </div>
         </div>
     </div>
@@ -696,10 +797,11 @@
 
         // 아이 삭제
         function deleteChild(name) {
-            if (confirm(`${name} 아이의 모든 스케줄을 삭제하시겠습니까?`)) {
+            showConfirm(`${name} 아이의 모든 스케줄을 삭제하시겠습니까?`, '🗑️', function() {
                 schedules = schedules.filter(s => s.name !== name);
                 renderManageList();
-            }
+                showAlert('삭제가 완료되었습니다.', '✅');
+            });
         }
 
         // 폼 모달 닫기
@@ -720,7 +822,7 @@
             const departureLocation = document.getElementById('departureLocationInput').value.trim();
 
             if (!name) {
-                alert('아이 이름을 입력해주세요.');
+                showAlert('아이 이름을 입력해주세요.', '⚠️');
                 return;
             }
 
@@ -750,12 +852,15 @@
             }
 
             if ((!arrivalTime || !arrivalLocation) && (!departureTime || !departureLocation)) {
-                alert('최소한 등원 또는 하원 정보 중 하나는 입력해주세요.');
+                showAlert('최소한 등원 또는 하원 정보 중 하나는 입력해주세요.', '⚠️');
                 return;
             }
 
             closeFormModal();
             renderManageList();
+            
+            const action = editingChild ? '수정' : '추가';
+            showAlert(`${action}가 완료되었습니다!`, '✅');
         }
 
         // 터치 이벤트 처리
@@ -764,10 +869,60 @@
                 e.target.classList.contains('close-btn') || 
                 e.target.classList.contains('form-btn') || 
                 e.target.classList.contains('action-btn') || 
-                e.target.classList.contains('add-btn-top')) {
+                e.target.classList.contains('add-btn-top') ||
+                e.target.classList.contains('alert-btn')) {
                 e.target.style.transition = 'all 0.1s ease';
             }
         });
+
+        // 커스텀 알림 함수들
+        function showAlert(message, icon = 'ℹ️') {
+            document.getElementById('alertIcon').textContent = icon;
+            document.getElementById('alertMessage').textContent = message;
+            document.getElementById('alertButtons').innerHTML = `
+                <button class="alert-btn" onclick="closeAlert()">확인</button>
+            `;
+            
+            const modal = document.getElementById('alertModal');
+            modal.style.display = 'block';
+            requestAnimationFrame(() => {
+                modal.classList.add('show');
+            });
+        }
+
+        function showConfirm(message, icon = '❓', onConfirm) {
+            document.getElementById('alertIcon').textContent = icon;
+            document.getElementById('alertMessage').textContent = message;
+            document.getElementById('alertButtons').innerHTML = `
+                <button class="alert-btn cancel" onclick="closeAlert()">취소</button>
+                <button class="alert-btn danger" onclick="confirmAction()">삭제</button>
+            `;
+            
+            // 임시로 확인 콜백 저장
+            window.tempConfirmCallback = onConfirm;
+            
+            const modal = document.getElementById('alertModal');
+            modal.style.display = 'block';
+            requestAnimationFrame(() => {
+                modal.classList.add('show');
+            });
+        }
+
+        function confirmAction() {
+            if (window.tempConfirmCallback) {
+                window.tempConfirmCallback();
+                window.tempConfirmCallback = null;
+            }
+            closeAlert();
+        }
+
+        function closeAlert() {
+            const modal = document.getElementById('alertModal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
     </script>
 </body>
 </html>
