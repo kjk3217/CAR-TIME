@@ -958,7 +958,7 @@
             renderManageList();
         }
 
-        // 파일 업로드 처리
+        // 파일 업로드 처리 (개선됨)
         function uploadFile() {
             const fileInput = document.getElementById('fileInput');
             const file = fileInput.files[0];
@@ -968,58 +968,114 @@
                 return;
             }
             
-            if (!file.name.endsWith('.txt')) {
+            if (!file.name.toLowerCase().endsWith('.txt')) {
                 showAlert('텍스트 파일(.txt)만 업로드 가능합니다.');
                 return;
             }
             
+            // 파일 읽기 시작
             const reader = new FileReader();
+            
             reader.onload = function(e) {
-                const content = e.target.result;
-                parseFileContent(content);
+                try {
+                    const content = e.target.result;
+                    console.log('파일 내용:', content); // 디버깅용
+                    parseFileContent(content);
+                } catch (error) {
+                    console.error('파일 읽기 오류:', error);
+                    showAlert('파일을 읽는 중 오류가 발생했습니다.');
+                }
             };
+            
+            reader.onerror = function() {
+                showAlert('파일을 읽을 수 없습니다.');
+            };
+            
+            // UTF-8로 파일 읽기
             reader.readAsText(file, 'UTF-8');
         }
         
-        // 파일 내용 파싱
+        // 파일 내용 파싱 (개선됨)
         function parseFileContent(content) {
-            const lines = content.split('\n').filter(line => line.trim() !== '');
+            if (!content || content.trim() === '') {
+                showAlert('파일이 비어있습니다.');
+                return;
+            }
+            
+            // 줄바꿈으로 분할하고 빈 줄 제거
+            const lines = content.split(/\r?\n/).filter(line => line.trim() !== '');
+            console.log('파싱된 줄들:', lines); // 디버깅용
+            
+            if (lines.length === 0) {
+                showAlert('파일에 데이터가 없습니다.');
+                return;
+            }
+            
             const newChildrenData = [];
             let errorCount = 0;
+            let errorLines = [];
             
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
+                console.log(`줄 ${i + 1}: "${line}"`); // 디버깅용
+                
+                // 콤마로 분할
                 const parts = line.split(',').map(part => part.trim());
+                console.log(`분할된 부분:`, parts); // 디버깅용
                 
                 if (parts.length !== 5) {
                     errorCount++;
+                    errorLines.push(`줄 ${i + 1}: 항목 수가 맞지 않음 (${parts.length}개, 5개 필요)`);
                     continue;
                 }
                 
                 const [name, goSchoolTime, goSchoolLocation, goHomeTime, goHomeLocation] = parts;
                 
+                // 필수 항목 체크
                 if (!name || !goSchoolTime || !goSchoolLocation || !goHomeTime || !goHomeLocation) {
                     errorCount++;
+                    errorLines.push(`줄 ${i + 1}: 빈 항목이 있음`);
                     continue;
                 }
                 
-                // 시간 형식 검증 (HH:MM)
-                const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
-                if (!timeRegex.test(goSchoolTime) || !timeRegex.test(goHomeTime)) {
+                // 시간 형식 검증 (더 유연하게)
+                const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/;
+                if (!timeRegex.test(goSchoolTime)) {
                     errorCount++;
+                    errorLines.push(`줄 ${i + 1}: 등원 시간 형식 오류 (${goSchoolTime})`);
                     continue;
                 }
                 
+                if (!timeRegex.test(goHomeTime)) {
+                    errorCount++;
+                    errorLines.push(`줄 ${i + 1}: 하원 시간 형식 오류 (${goHomeTime})`);
+                    continue;
+                }
+                
+                // 데이터 추가
                 newChildrenData.push({
                     id: Date.now() + i,
                     name: name,
                     goSchool: { time: goSchoolTime, location: goSchoolLocation },
                     goHome: { time: goHomeTime, location: goHomeLocation }
                 });
+                
+                console.log(`성공적으로 추가된 아이: ${name}`); // 디버깅용
             }
             
+            console.log(`총 ${newChildrenData.length}명 파싱됨, ${errorCount}개 오류`); // 디버깅용
+            
             if (newChildrenData.length === 0) {
-                showAlert('올바른 형식의 데이터가 없습니다.\n\n형식: 이름,등원시간,등원장소,하원시간,하원장소\n예시: 김민수,08:30,아파트 정문,14:30,아파트 정문');
+                let errorMessage = '올바른 형식의 데이터가 없습니다.\n\n';
+                errorMessage += '형식: 이름,등원시간,등원장소,하원시간,하원장소\n';
+                errorMessage += '예시: 김민수,08:30,아파트 정문,14:30,아파트 정문\n\n';
+                if (errorLines.length > 0) {
+                    errorMessage += '오류 내용:\n' + errorLines.slice(0, 3).join('\n');
+                    if (errorLines.length > 3) {
+                        errorMessage += `\n... 외 ${errorLines.length - 3}개`;
+                    }
+                }
+                showAlert(errorMessage);
                 return;
             }
             
