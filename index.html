@@ -90,22 +90,14 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .btn.arrival:active {
-            background: linear-gradient(135deg, rgba(46, 213, 115, 0.9), rgba(0, 184, 148, 0.9));
-        }
-
-        .btn.departure:active {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.9), rgba(238, 82, 83, 0.9));
-        }
-
-        .btn.manage:active {
-            background: linear-gradient(135deg, rgba(155, 89, 182, 0.9), rgba(142, 68, 173, 0.9));
-        }
-
         .btn.arrival {
             background: linear-gradient(135deg, rgba(46, 213, 115, 0.8), rgba(0, 184, 148, 0.8));
             border-color: rgba(46, 213, 115, 0.9);
             box-shadow: 0 8px 25px rgba(46, 213, 115, 0.3);
+        }
+
+        .btn.arrival:active {
+            background: linear-gradient(135deg, rgba(46, 213, 115, 0.9), rgba(0, 184, 148, 0.9));
         }
 
         .btn.departure {
@@ -114,10 +106,18 @@
             box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
         }
 
+        .btn.departure:active {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.9), rgba(238, 82, 83, 0.9));
+        }
+
         .btn.manage {
             background: linear-gradient(135deg, rgba(155, 89, 182, 0.8), rgba(142, 68, 173, 0.8));
             border-color: rgba(155, 89, 182, 0.9);
             box-shadow: 0 8px 25px rgba(155, 89, 182, 0.3);
+        }
+
+        .btn.manage:active {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.9), rgba(142, 68, 173, 0.9));
         }
 
         .footer {
@@ -216,22 +216,40 @@
         }
 
         .schedule-name {
-            font-size: 20px;
+            font-size: 25px;
             font-weight: 700;
         }
 
         .schedule-time {
-            font-size: 18px;
+            font-size: 25px;
             font-weight: 600;
             text-align: center;
             color: #FFE066;
         }
 
         .schedule-location {
-            font-size: 16px;
+            font-size: 25px;
             font-weight: 500;
             text-align: right;
             opacity: 0.9;
+        }
+
+        .manage-item {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 70px;
+        }
+
+        .manage-name {
+            font-size: 25px;
+            font-weight: 700;
+            flex: 1;
         }
 
         .add-btn-top {
@@ -377,15 +395,19 @@
             }
             
             .schedule-name {
-                font-size: 18px;
+                font-size: 22px;
             }
             
             .schedule-time {
-                font-size: 16px;
+                font-size: 22px;
             }
             
             .schedule-location {
-                font-size: 14px;
+                font-size: 22px;
+            }
+
+            .manage-name {
+                font-size: 22px;
             }
         }
     </style>
@@ -443,7 +465,7 @@
                 <h2 class="modal-title">⚙️ 스케줄 관리</h2>
                 <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
-            <button class="add-btn-top" onclick="showAddForm()">+ 새 스케줄 추가</button>
+            <button class="add-btn-top" onclick="showAddForm()">+ 새 아이 추가</button>
             <div id="manageList" class="schedule-list"></div>
         </div>
     </div>
@@ -452,7 +474,7 @@
     <div id="formModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="formTitle">새 스케줄 추가</h2>
+                <h2 class="modal-title" id="formTitle">새 아이 추가</h2>
                 <button class="close-btn" onclick="closeFormModal()">&times;</button>
             </div>
             <div class="form-group">
@@ -460,19 +482,20 @@
                 <input type="text" id="nameInput" class="form-input" placeholder="아이 이름을 입력하세요">
             </div>
             <div class="form-group">
-                <label class="form-label">시간</label>
-                <input type="time" id="timeInput" class="form-input">
+                <label class="form-label">등원 시간</label>
+                <input type="time" id="arrivalTimeInput" class="form-input">
             </div>
             <div class="form-group">
-                <label class="form-label">장소</label>
-                <input type="text" id="locationInput" class="form-input" placeholder="픽업/드롭 장소를 입력하세요">
+                <label class="form-label">등원 장소</label>
+                <input type="text" id="arrivalLocationInput" class="form-input" placeholder="등원 픽업 장소를 입력하세요">
             </div>
             <div class="form-group">
-                <label class="form-label">타입</label>
-                <select id="typeInput" class="form-input">
-                    <option value="arrival">등원</option>
-                    <option value="departure">하원</option>
-                </select>
+                <label class="form-label">하원 시간</label>
+                <input type="time" id="departureTimeInput" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">하원 장소</label>
+                <input type="text" id="departureLocationInput" class="form-input" placeholder="하원 드롭 장소를 입력하세요">
             </div>
             <div class="form-buttons">
                 <button class="form-btn cancel" onclick="closeFormModal()">취소</button>
@@ -483,8 +506,8 @@
 
     <script>
         // 전역 변수
-        let schedules = JSON.parse(localStorage.getItem('busSchedules')) || [];
-        let editingIndex = -1;
+        let schedules = [];
+        let editingChild = null;
 
         // 초기화
         document.addEventListener('DOMContentLoaded', function() {
@@ -501,7 +524,6 @@
                     { name: '이하늘', time: '15:35', location: '놀이터', type: 'departure' },
                     { name: '박지우', time: '15:45', location: '204동', type: 'departure' }
                 ];
-                saveToStorage();
             }
         });
 
@@ -579,44 +601,47 @@
         // 관리 리스트 렌더링
         function renderManageList() {
             const container = document.getElementById('manageList');
-            const sortedSchedules = [...schedules].sort((a, b) => {
-                if (a.type !== b.type) {
-                    return a.type === 'arrival' ? -1 : 1;
+            
+            // 이름별로 그룹화
+            const groupedByName = {};
+            schedules.forEach((schedule, index) => {
+                if (!groupedByName[schedule.name]) {
+                    groupedByName[schedule.name] = {
+                        name: schedule.name,
+                        arrival: null,
+                        departure: null,
+                        indices: {}
+                    };
                 }
-                return a.time.localeCompare(b.time);
+                
+                if (schedule.type === 'arrival') {
+                    groupedByName[schedule.name].arrival = schedule;
+                    groupedByName[schedule.name].indices.arrival = index;
+                } else {
+                    groupedByName[schedule.name].departure = schedule;
+                    groupedByName[schedule.name].indices.departure = index;
+                }
             });
 
-            if (sortedSchedules.length === 0) {
+            const uniqueNames = Object.keys(groupedByName);
+            
+            if (uniqueNames.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <h3>등록된 스케줄이 없습니다</h3>
-                        <p>아래 버튼을 눌러 새 스케줄을 추가해주세요</p>
+                        <h3>등록된 아이가 없습니다</h3>
+                        <p>위 버튼을 눌러 새 아이를 추가해주세요</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = sortedSchedules.map((schedule, index) => {
-                const originalIndex = schedules.findIndex(s => 
-                    s.name === schedule.name && 
-                    s.time === schedule.time && 
-                    s.location === schedule.location && 
-                    s.type === schedule.type
-                );
-                const timeFormatted = formatTime(schedule.time);
-                const typeText = schedule.type === 'arrival' ? '🌅 등원' : '🌆 하원';
-                
+            container.innerHTML = uniqueNames.map(name => {
                 return `
-                    <div class="schedule-item">
-                        <div class="schedule-name">${schedule.name}</div>
-                        <div class="schedule-time">${timeFormatted}</div>
-                        <div class="schedule-location">${schedule.location}</div>
-                        <div style="grid-column: 1 / -1; font-size: 16px; opacity: 0.8; margin-top: 5px;">
-                            ${typeText}
-                        </div>
-                        <div class="action-buttons" style="grid-column: 1 / -1; margin-top: 10px;">
-                            <button class="action-btn edit" onclick="editSchedule(${originalIndex})">수정</button>
-                            <button class="action-btn delete" onclick="deleteSchedule(${originalIndex})">삭제</button>
+                    <div class="manage-item">
+                        <div class="manage-name">${name}</div>
+                        <div class="action-buttons">
+                            <button class="action-btn edit" onclick="editChild('${name}')">수정</button>
+                            <button class="action-btn delete" onclick="deleteChild('${name}')">삭제</button>
                         </div>
                     </div>
                 `;
@@ -634,12 +659,13 @@
 
         // 추가 폼 표시
         function showAddForm() {
-            document.getElementById('formTitle').textContent = '새 스케줄 추가';
+            document.getElementById('formTitle').textContent = '새 아이 추가';
             document.getElementById('nameInput').value = '';
-            document.getElementById('timeInput').value = '';
-            document.getElementById('locationInput').value = '';
-            document.getElementById('typeInput').value = 'arrival';
-            editingIndex = -1;
+            document.getElementById('arrivalTimeInput').value = '';
+            document.getElementById('arrivalLocationInput').value = '';
+            document.getElementById('departureTimeInput').value = '';
+            document.getElementById('departureLocationInput').value = '';
+            editingChild = null;
             
             const modal = document.getElementById('formModal');
             modal.style.display = 'block';
@@ -648,21 +674,32 @@
             });
         }
 
-        // 수정 폼 표시
-        function editSchedule(index) {
-            const schedule = schedules[index];
-            document.getElementById('formTitle').textContent = '스케줄 수정';
-            document.getElementById('nameInput').value = schedule.name;
-            document.getElementById('timeInput').value = schedule.time;
-            document.getElementById('locationInput').value = schedule.location;
-            document.getElementById('typeInput').value = schedule.type;
-            editingIndex = index;
+        // 아이 정보 수정
+        function editChild(name) {
+            const arrivalSchedule = schedules.find(s => s.name === name && s.type === 'arrival');
+            const departureSchedule = schedules.find(s => s.name === name && s.type === 'departure');
+            
+            document.getElementById('formTitle').textContent = '아이 정보 수정';
+            document.getElementById('nameInput').value = name;
+            document.getElementById('arrivalTimeInput').value = arrivalSchedule ? arrivalSchedule.time : '';
+            document.getElementById('arrivalLocationInput').value = arrivalSchedule ? arrivalSchedule.location : '';
+            document.getElementById('departureTimeInput').value = departureSchedule ? departureSchedule.time : '';
+            document.getElementById('departureLocationInput').value = departureSchedule ? departureSchedule.location : '';
+            editingChild = name;
             
             const modal = document.getElementById('formModal');
             modal.style.display = 'block';
             requestAnimationFrame(() => {
                 modal.classList.add('show');
             });
+        }
+
+        // 아이 삭제
+        function deleteChild(name) {
+            if (confirm(`${name} 아이의 모든 스케줄을 삭제하시겠습니까?`)) {
+                schedules = schedules.filter(s => s.name !== name);
+                renderManageList();
+            }
         }
 
         // 폼 모달 닫기
@@ -677,40 +714,48 @@
         // 스케줄 저장
         function saveSchedule() {
             const name = document.getElementById('nameInput').value.trim();
-            const time = document.getElementById('timeInput').value;
-            const location = document.getElementById('locationInput').value.trim();
-            const type = document.getElementById('typeInput').value;
+            const arrivalTime = document.getElementById('arrivalTimeInput').value;
+            const arrivalLocation = document.getElementById('arrivalLocationInput').value.trim();
+            const departureTime = document.getElementById('departureTimeInput').value;
+            const departureLocation = document.getElementById('departureLocationInput').value.trim();
 
-            if (!name || !time || !location) {
-                alert('모든 필드를 입력해주세요.');
+            if (!name) {
+                alert('아이 이름을 입력해주세요.');
                 return;
             }
 
-            const schedule = { name, time, location, type };
-
-            if (editingIndex >= 0) {
-                schedules[editingIndex] = schedule;
-            } else {
-                schedules.push(schedule);
+            // 기존 스케줄 삭제 (수정인 경우)
+            if (editingChild) {
+                schedules = schedules.filter(s => s.name !== editingChild);
             }
 
-            saveToStorage();
+            // 등원 스케줄 추가
+            if (arrivalTime && arrivalLocation) {
+                schedules.push({
+                    name: name,
+                    time: arrivalTime,
+                    location: arrivalLocation,
+                    type: 'arrival'
+                });
+            }
+
+            // 하원 스케줄 추가
+            if (departureTime && departureLocation) {
+                schedules.push({
+                    name: name,
+                    time: departureTime,
+                    location: departureLocation,
+                    type: 'departure'
+                });
+            }
+
+            if ((!arrivalTime || !arrivalLocation) && (!departureTime || !departureLocation)) {
+                alert('최소한 등원 또는 하원 정보 중 하나는 입력해주세요.');
+                return;
+            }
+
             closeFormModal();
             renderManageList();
-        }
-
-        // 스케줄 삭제
-        function deleteSchedule(index) {
-            if (confirm('정말 삭제하시겠습니까?')) {
-                schedules.splice(index, 1);
-                saveToStorage();
-                renderManageList();
-            }
-        }
-
-        // 로컬스토리지에 저장
-        function saveToStorage() {
-            localStorage.setItem('busSchedules', JSON.stringify(schedules));
         }
 
         // 터치 이벤트 처리
@@ -719,26 +764,10 @@
                 e.target.classList.contains('close-btn') || 
                 e.target.classList.contains('form-btn') || 
                 e.target.classList.contains('action-btn') || 
-                e.target.classList.contains('add-btn')) {
+                e.target.classList.contains('add-btn-top')) {
                 e.target.style.transition = 'all 0.1s ease';
             }
         });
-
-        // PWA 설치 프롬프트
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-        });
-
-        // 서비스 워커 등록 (기본적인 캐싱)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('data:text/javascript;base64,Ly8gQmFzaWMgc2VydmljZSB3b3JrZXIgZm9yIGNhY2hpbmcKc2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZXZlbnQgPT4gewogIGV2ZW50LndhaXRVbnRpbCgKICAgIGNhY2hlcy5vcGVuKCdzdW1tZXJoaWxsLWJ1cy12MScpLnRoZW4oY2FjaGUgPT4gewogICAgICByZXR1cm4gY2FjaGUuYWRkQWxsKFsnLyddKTsKICAgIH0pCiAgKTsKfSk7CgpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZXZlbnQgPT4gewogIGV2ZW50LnJlc3BvbmRXaXRoKAogICAgY2FjaGVzLm1hdGNoKGV2ZW50LnJlcXVlc3QpLnRoZW4ocmVzcG9uc2UgPT4gewogICAgICByZXR1cm4gcmVzcG9uc2UgfHwgZmV0Y2goZXZlbnQucmVxdWVzdCk7CiAgICB9KQogICk7Cn0pOw==')
-                .then(registration => console.log('ServiceWorker registered'))
-                .catch(error => console.log('ServiceWorker registration failed'));
-            });
-        }
     </script>
 </body>
 </html>
