@@ -1399,37 +1399,8 @@
             }, 400);
         }
 
-        // 수정된 아이 정보 저장
-        function saveEditChild(id) {
-            const child = childrenData.find(c => c.id === id);
-            if (!child) return;
-            
-            const name = document.getElementById('editChildName').value.trim();
-            const goSchoolTime = document.getElementById('editGoSchoolTime').value;
-            const goSchoolLocation = document.getElementById('editGoSchoolLocation').value.trim();
-            const goHomeTime = document.getElementById('editGoHomeTime').value;
-            const goHomeLocation = document.getElementById('editGoHomeLocation').value.trim();
-            
-            if (!name || !goSchoolLocation || !goHomeLocation) {
-                showAlert('모든 필드를 입력해주세요.');
-                return;
-            }
-            
-            child.name = name;
-            child.goSchool.time = goSchoolTime;
-            child.goSchool.location = goSchoolLocation;
-            child.goHome.time = goHomeTime;
-            child.goHome.location = goHomeLocation;
-            
-            saveData();
-            renderManageList();
-            
-            // 수정 모달 닫기
-            const editModal = document.querySelector('.modal:last-child');
-            closeEditModal(editModal);
-            
-            showAlert('수정되었습니다.');
-        }
+        // 수정된 아이 정보 저장 (제거 - 새로운 함수로 대체됨)
+        // saveEditChild 함수는 saveEditChildById로 대체됨
 
         // 모달 외부 클릭시 닫기 (애니메이션 적용)
         window.onclick = function(event) {
