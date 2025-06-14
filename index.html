@@ -140,22 +140,28 @@
             font-weight: bold;
             color: #2d3748;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
             min-height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transform: translateY(0);
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .mode-button:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
 
         .mode-button:active {
-            transform: translateY(0);
+            transform: translateY(2px) scale(0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.1s ease;
         }
 
         .mode-button.go-school {
@@ -163,14 +169,26 @@
             color: white;
         }
 
+        .mode-button.go-school:active {
+            background: linear-gradient(135deg, #3d8bfe 0%, #00d4e6 100%);
+        }
+
         .mode-button.go-home {
             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
             color: white;
         }
 
+        .mode-button.go-home:active {
+            background: linear-gradient(135deg, #38d16a 0%, #2de0c5 100%);
+        }
+
         .mode-button.manage {
             background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
             color: white;
+        }
+
+        .mode-button.manage:active {
+            background: linear-gradient(135deg, #f85d88 0%, #fed02e 100%);
         }
 
         /* 하단 정보 */
@@ -283,10 +301,20 @@
             justify-content: center;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
+            transition: all 0.2s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .close:hover {
             background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .close:active {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-50%) scale(0.95);
         }
 
         .modal-body {
@@ -356,9 +384,13 @@
             font-size: 20px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             flex: 1;
             min-width: 80px;
+            transform: translateY(0);
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-primary {
@@ -366,9 +398,21 @@
             color: white;
         }
 
+        .btn-primary:active {
+            background: #3182ce;
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
         .btn-success {
             background: #48bb78;
             color: white;
+        }
+
+        .btn-success:active {
+            background: #38a169;
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .btn-danger {
@@ -376,8 +420,14 @@
             color: white;
         }
 
+        .btn-danger:active {
+            background: #e53e3e;
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
         .btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-1px);
             filter: brightness(110%);
         }
 
@@ -399,13 +449,20 @@
             border: 2px solid #e2e8f0;
             border-radius: 10px;
             font-size: 20px;
-            transition: border-color 0.3s ease;
+            transition: all 0.2s ease;
+            user-select: text;
+            -webkit-user-select: text;
         }
 
         .form-group input:focus {
             outline: none;
             border-color: #4299e1;
             box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+            transform: scale(1.02);
+        }
+
+        .form-group input:active {
+            transform: scale(1.01);
         }
 
         /* 빈 상태 */
@@ -531,10 +588,8 @@
             <button class="mode-button manage" onclick="openModal('manage')">
                 ⚙️ 관리
             </button>
-        </div>
-
-        <!-- 하단 정보 -->
-        <div class="footer">
+            
+            <!-- 버전 정보 -->
             <div class="app-version">수서서머힐 차량 시간표 앱 V1</div>
         </div>
 
@@ -1021,7 +1076,14 @@
                     font-size: 20px;
                     font-weight: bold;
                     cursor: pointer;
-                ">확인</button>
+                    transition: all 0.2s ease;
+                    user-select: none;
+                    -webkit-user-select: none;
+                    -webkit-tap-highlight-color: transparent;
+                " 
+                onmousedown="this.style.transform='scale(0.95)'; this.style.background='#3182ce'"
+                onmouseup="this.style.transform='scale(1)'; this.style.background='#4299e1'"
+                onmouseleave="this.style.transform='scale(1)'; this.style.background='#4299e1'">확인</button>
             `;
             
             document.body.appendChild(alertDiv);
@@ -1081,7 +1143,14 @@
                         font-size: 20px;
                         font-weight: bold;
                         cursor: pointer;
-                    ">확인</button>
+                        transition: all 0.2s ease;
+                        user-select: none;
+                        -webkit-user-select: none;
+                        -webkit-tap-highlight-color: transparent;
+                    " 
+                    onmousedown="this.style.transform='scale(0.95)'; this.style.background='#e53e3e'"
+                    onmouseup="this.style.transform='scale(1)'; this.style.background='#f56565'"
+                    onmouseleave="this.style.transform='scale(1)'; this.style.background='#f56565'">확인</button>
                     <button class="confirm-no" style="
                         background: #718096;
                         color: white;
@@ -1091,7 +1160,14 @@
                         font-size: 20px;
                         font-weight: bold;
                         cursor: pointer;
-                    ">취소</button>
+                        transition: all 0.2s ease;
+                        user-select: none;
+                        -webkit-user-select: none;
+                        -webkit-tap-highlight-color: transparent;
+                    "
+                    onmousedown="this.style.transform='scale(0.95)'; this.style.background='#4a5568'"
+                    onmouseup="this.style.transform='scale(1)'; this.style.background='#718096'"
+                    onmouseleave="this.style.transform='scale(1)'; this.style.background='#718096'">취소</button>
                 </div>
             `;
             
