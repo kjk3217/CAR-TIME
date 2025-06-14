@@ -792,6 +792,47 @@
         let currentTimeType = ''; // 'arrival' 또는 'departure'
         let selectedPeriod = 'AM';
 
+        // 로컬스토리지에서 데이터 로드
+        function loadFromStorage() {
+            try {
+                const stored = localStorage.getItem('summerhill_bus_schedules');
+                if (stored) {
+                    schedules = JSON.parse(stored);
+                    console.log('데이터 로드됨:', schedules.length, '개 스케줄');
+                } else {
+                    console.log('저장된 데이터 없음, 샘플 데이터 생성');
+                    createSampleData();
+                }
+            } catch (error) {
+                console.error('데이터 로드 실패:', error);
+                createSampleData();
+            }
+        }
+
+        // 로컬스토리지에 데이터 저장
+        function saveToStorage() {
+            try {
+                localStorage.setItem('summerhill_bus_schedules', JSON.stringify(schedules));
+                console.log('데이터 저장됨:', schedules.length, '개 스케줄');
+            } catch (error) {
+                console.error('데이터 저장 실패:', error);
+                showAlert('데이터 저장에 실패했습니다.', '⚠️');
+            }
+        }
+
+        // 샘플 데이터 생성
+        function createSampleData() {
+            schedules = [
+                { name: '김민수', time: '08:30', location: '아파트 정문', type: 'arrival' },
+                { name: '이하늘', time: '08:35', location: '놀이터', type: 'arrival' },
+                { name: '박지우', time: '08:45', location: '204동', type: 'arrival' },
+                { name: '김민수', time: '15:30', location: '아파트 정문', type: 'departure' },
+                { name: '이하늘', time: '15:35', location: '놀이터', type: 'departure' },
+                { name: '박지우', time: '15:45', location: '204동', type: 'departure' }
+            ];
+            saveToStorage(); // 샘플 데이터도 저장
+        }
+
         // 서비스 워커 등록 (PWA를 위한 캐싱)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
@@ -861,20 +902,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             checkPWAMode();
             hideAddressBar(); // 페이지 로드 시 즉시 실행
+            loadFromStorage(); // 저장된 데이터 로드
             updateDateTime();
             setInterval(updateDateTime, 1000);
-            
-            // 기본 데이터가 없으면 샘플 데이터 추가
-            if (schedules.length === 0) {
-                schedules = [
-                    { name: '김민수', time: '08:30', location: '아파트 정문', type: 'arrival' },
-                    { name: '이하늘', time: '08:35', location: '놀이터', type: 'arrival' },
-                    { name: '박지우', time: '08:45', location: '204동', type: 'arrival' },
-                    { name: '김민수', time: '15:30', location: '아파트 정문', type: 'departure' },
-                    { name: '이하늘', time: '15:35', location: '놀이터', type: 'departure' },
-                    { name: '박지우', time: '15:45', location: '204동', type: 'departure' }
-                ];
-            }
         });
 
         // 시간 업데이트
@@ -1066,6 +1096,7 @@
         function deleteChild(name) {
             showConfirm(`${name} 아이의 모든 스케줄을 삭제하시겠습니까?`, '🗑️', function() {
                 schedules = schedules.filter(s => s.name !== name);
+                saveToStorage(); // 삭제 후 저장
                 renderManageList();
                 showAlert('삭제가 완료되었습니다.', '✅');
             });
@@ -1123,6 +1154,7 @@
                 return;
             }
 
+            saveToStorage(); // 저장
             closeFormModal();
             renderManageList();
             
