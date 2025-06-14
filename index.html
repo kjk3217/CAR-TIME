@@ -291,7 +291,7 @@
         .form-input {
             width: 100%;
             padding: 15px;
-            font-size: 18px;
+            font-size: 25px;
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.1);
@@ -461,6 +461,135 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
+        /* 시간 선택 팝업 */
+        .time-picker-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .time-picker-modal.show {
+            opacity: 1;
+        }
+
+        .time-picker-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            min-width: 350px;
+            max-width: 90vw;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .time-picker-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .time-period-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .period-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 15px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            flex: 1;
+        }
+
+        .period-btn.active {
+            background: linear-gradient(135deg, #2ECC71, #27AE60);
+            border-color: #2ECC71;
+        }
+
+        .period-btn:active {
+            transform: scale(0.98);
+        }
+
+        .time-input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .time-number-input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            width: 80px;
+            backdrop-filter: blur(10px);
+        }
+
+        .time-number-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .time-separator {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .time-picker-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .time-picker-btn {
+            background: linear-gradient(135deg, #2ECC71, #27AE60);
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 15px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            min-width: 100px;
+        }
+
+        .time-picker-btn.cancel {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .time-picker-btn:active {
+            transform: scale(0.98);
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 8px;
@@ -584,7 +713,8 @@
             </div>
             <div class="form-group">
                 <label class="form-label">등원 시간</label>
-                <input type="time" id="arrivalTimeInput" class="form-input">
+                <input type="text" id="arrivalTimeDisplay" class="form-input" placeholder="시간을 선택하세요" readonly onclick="showTimePicker('arrival')">
+                <input type="hidden" id="arrivalTimeInput">
             </div>
             <div class="form-group">
                 <label class="form-label">등원 장소</label>
@@ -592,7 +722,8 @@
             </div>
             <div class="form-group">
                 <label class="form-label">하원 시간</label>
-                <input type="time" id="departureTimeInput" class="form-input">
+                <input type="text" id="departureTimeDisplay" class="form-input" placeholder="시간을 선택하세요" readonly onclick="showTimePicker('departure')">
+                <input type="hidden" id="departureTimeInput">
             </div>
             <div class="form-group">
                 <label class="form-label">하원 장소</label>
@@ -601,6 +732,29 @@
             <div class="form-buttons">
                 <button class="form-btn cancel" onclick="closeFormModal()">취소</button>
                 <button class="form-btn save" onclick="saveSchedule()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 시간 선택 팝업 -->
+    <div id="timePickerModal" class="time-picker-modal">
+        <div class="time-picker-content">
+            <div class="time-picker-title">시간 선택</div>
+            
+            <div class="time-period-selector">
+                <button class="period-btn active" id="amBtn" onclick="selectPeriod('AM')">오전</button>
+                <button class="period-btn" id="pmBtn" onclick="selectPeriod('PM')">오후</button>
+            </div>
+            
+            <div class="time-input-group">
+                <input type="number" class="time-number-input" id="hourInput" placeholder="시" min="1" max="12" maxlength="2">
+                <span class="time-separator">:</span>
+                <input type="number" class="time-number-input" id="minuteInput" placeholder="분" min="0" max="59" maxlength="2">
+            </div>
+            
+            <div class="time-picker-buttons">
+                <button class="time-picker-btn cancel" onclick="closeTimePicker()">취소</button>
+                <button class="time-picker-btn" onclick="confirmTime()">확인</button>
             </div>
         </div>
     </div>
@@ -620,6 +774,8 @@
         // 전역 변수
         let schedules = [];
         let editingChild = null;
+        let currentTimeType = ''; // 'arrival' 또는 'departure'
+        let selectedPeriod = 'AM';
 
         // 초기화
         document.addEventListener('DOMContentLoaded', function() {
@@ -773,8 +929,10 @@
         function showAddForm() {
             document.getElementById('formTitle').textContent = '새 아이 추가';
             document.getElementById('nameInput').value = '';
+            document.getElementById('arrivalTimeDisplay').value = '';
             document.getElementById('arrivalTimeInput').value = '';
             document.getElementById('arrivalLocationInput').value = '';
+            document.getElementById('departureTimeDisplay').value = '';
             document.getElementById('departureTimeInput').value = '';
             document.getElementById('departureLocationInput').value = '';
             editingChild = null;
@@ -793,9 +951,25 @@
             
             document.getElementById('formTitle').textContent = '아이 정보 수정';
             document.getElementById('nameInput').value = name;
-            document.getElementById('arrivalTimeInput').value = arrivalSchedule ? arrivalSchedule.time : '';
+            
+            if (arrivalSchedule) {
+                document.getElementById('arrivalTimeInput').value = arrivalSchedule.time;
+                document.getElementById('arrivalTimeDisplay').value = formatTime(arrivalSchedule.time);
+            } else {
+                document.getElementById('arrivalTimeInput').value = '';
+                document.getElementById('arrivalTimeDisplay').value = '';
+            }
+            
             document.getElementById('arrivalLocationInput').value = arrivalSchedule ? arrivalSchedule.location : '';
-            document.getElementById('departureTimeInput').value = departureSchedule ? departureSchedule.time : '';
+            
+            if (departureSchedule) {
+                document.getElementById('departureTimeInput').value = departureSchedule.time;
+                document.getElementById('departureTimeDisplay').value = formatTime(departureSchedule.time);
+            } else {
+                document.getElementById('departureTimeInput').value = '';
+                document.getElementById('departureTimeDisplay').value = '';
+            }
+            
             document.getElementById('departureLocationInput').value = departureSchedule ? departureSchedule.location : '';
             editingChild = name;
             
@@ -929,6 +1103,91 @@
 
         function closeAlert() {
             const modal = document.getElementById('alertModal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        // 시간 선택 팝업 함수들
+        function showTimePicker(type) {
+            currentTimeType = type;
+            
+            // 기존 값이 있으면 표시
+            const timeInput = document.getElementById(type + 'TimeInput');
+            if (timeInput.value) {
+                const [hours, minutes] = timeInput.value.split(':');
+                const hour24 = parseInt(hours);
+                const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+                const period = hour24 < 12 ? 'AM' : 'PM';
+                
+                selectedPeriod = period;
+                document.getElementById('hourInput').value = hour12;
+                document.getElementById('minuteInput').value = minutes;
+                selectPeriod(period);
+            } else {
+                // 초기값 설정
+                selectedPeriod = 'AM';
+                document.getElementById('hourInput').value = '';
+                document.getElementById('minuteInput').value = '';
+                selectPeriod('AM');
+            }
+            
+            const modal = document.getElementById('timePickerModal');
+            modal.style.display = 'block';
+            requestAnimationFrame(() => {
+                modal.classList.add('show');
+            });
+        }
+
+        function selectPeriod(period) {
+            selectedPeriod = period;
+            document.getElementById('amBtn').classList.toggle('active', period === 'AM');
+            document.getElementById('pmBtn').classList.toggle('active', period === 'PM');
+        }
+
+        function confirmTime() {
+            const hour = document.getElementById('hourInput').value;
+            const minute = document.getElementById('minuteInput').value;
+            
+            if (!hour || !minute) {
+                showAlert('시간과 분을 모두 입력해주세요.', '⚠️');
+                return;
+            }
+            
+            const hourNum = parseInt(hour);
+            const minuteNum = parseInt(minute);
+            
+            if (hourNum < 1 || hourNum > 12) {
+                showAlert('시간은 1-12 사이로 입력해주세요.', '⚠️');
+                return;
+            }
+            
+            if (minuteNum < 0 || minuteNum > 59) {
+                showAlert('분은 0-59 사이로 입력해주세요.', '⚠️');
+                return;
+            }
+            
+            // 24시간 형식으로 변환
+            let hour24 = hourNum;
+            if (selectedPeriod === 'PM' && hourNum !== 12) {
+                hour24 += 12;
+            } else if (selectedPeriod === 'AM' && hourNum === 12) {
+                hour24 = 0;
+            }
+            
+            const timeString = String(hour24).padStart(2, '0') + ':' + String(minuteNum).padStart(2, '0');
+            const displayString = `${selectedPeriod === 'AM' ? '오전' : '오후'} ${String(hourNum).padStart(2, '0')}:${String(minuteNum).padStart(2, '0')}`;
+            
+            // 값 설정
+            document.getElementById(currentTimeType + 'TimeInput').value = timeString;
+            document.getElementById(currentTimeType + 'TimeDisplay').value = displayString;
+            
+            closeTimePicker();
+        }
+
+        function closeTimePicker() {
+            const modal = document.getElementById('timePickerModal');
             modal.classList.remove('show');
             setTimeout(() => {
                 modal.style.display = 'none';
