@@ -220,11 +220,12 @@
             font-weight: 700;
             grid-column: 1;
             grid-row: 1;
+            color: white;
         }
 
         .schedule-time {
             font-size: 25px;
-            font-weight: 600;
+            font-weight: 700;
             color: #FFE066;
             grid-column: 2;
             grid-row: 1;
@@ -233,8 +234,8 @@
 
         .schedule-location {
             font-size: 22px;
-            font-weight: 500;
-            opacity: 0.9;
+            font-weight: 700;
+            color: #FFB6C1;
             grid-column: 1 / -1;
             grid-row: 2;
             padding-top: 5px;
@@ -341,13 +342,14 @@
         }
 
         .action-btn {
-            padding: 8px 15px;
-            font-size: 14px;
-            font-weight: 600;
+            padding: 12px 20px;
+            font-size: 18px;
+            font-weight: 700;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.1s ease;
+            min-width: 70px;
         }
 
         .action-btn.edit {
@@ -486,14 +488,23 @@
             
             .schedule-name {
                 font-size: 22px;
+                color: white;
             }
             
             .schedule-time {
                 font-size: 22px;
+                color: #FFE066;
             }
             
             .schedule-location {
                 font-size: 20px;
+                color: #FFB6C1;
+            }
+
+            .action-btn {
+                padding: 10px 16px;
+                font-size: 16px;
+                min-width: 60px;
             }
 
             .manage-name {
