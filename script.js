@@ -23,9 +23,6 @@ let editingId = null;
 
 // DOM이 로드된 후 실행
 document.addEventListener('DOMContentLoaded', function() {
-    // 날짜 업데이트
-    updateDateTime();
-    
     // 이벤트 리스너 등록
     setupEventListeners();
     
@@ -55,23 +52,6 @@ function setupEventListeners() {
         resetForm();
         showScreen('addChildScreen');
     });
-}
-
-// 현재 날짜 업데이트 (시간 제거)
-function updateDateTime() {
-    const now = new Date();
-    
-    // 날짜 포맷
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const date = String(now.getDate()).padStart(2, '0');
-    const days = ['일', '월', '화', '수', '목', '금', '토'];
-    const day = days[now.getDay()];
-    
-    const dateString = `${year}.${month}.${date} (${day})`;
-    
-    // DOM 업데이트
-    document.getElementById('currentDate').textContent = dateString;
 }
 
 // 출발 시간 표시 업데이트
