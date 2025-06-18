@@ -1,0 +1,378 @@
+/* 기본 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f3f4f6;
+    min-height: 100vh;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.max-w-md {
+    max-width: 28rem;
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 화면 전환 관련 스타일 */
+.screen {
+    display: none;
+    min-height: 100vh;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* 메인 화면 스타일 */
+.main-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #8B5CF6, #7C3AED);
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+.datetime-box {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.date-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.time-text {
+    font-size: 1.25rem;
+    margin-top: 0.5rem;
+}
+
+.button-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.main-btn {
+    width: 100%;
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    font-size: 1.875rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.pickup-btn {
+    background-color: #A78BFA;
+    color: white;
+}
+
+.pickup-btn:hover {
+    background-color: #C4B5FD;
+}
+
+.dropoff-btn {
+    background-color: #F472B6;
+    color: white;
+}
+
+.dropoff-btn:hover {
+    background-color: #FBBF24;
+}
+
+.manage-btn {
+    background-color: #4ADE80;
+    color: white;
+}
+
+.manage-btn:hover {
+    background-color: #6EE7B7;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 3rem;
+    font-size: 1.125rem;
+    opacity: 0.8;
+}
+
+/* 시간표 화면 공통 스타일 */
+.schedule-container {
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.pickup-bg {
+    background: linear-gradient(to bottom, #A78BFA, #8B5CF6);
+}
+
+.dropoff-bg {
+    background: linear-gradient(to bottom, #F472B6, #EC4899);
+}
+
+.manage-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #4ADE80, #10B981);
+    padding: 1rem;
+}
+
+.schedule-header {
+    background: white;
+    color: black;
+    border-radius: 1rem 1rem 0 0;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.schedule-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.close-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: #F97316;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.departure-info {
+    background: #FEF3C7;
+    color: black;
+    border-radius: 0 0 1rem 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.departure-info div {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.schedule-list {
+    background: white;
+    color: black;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.schedule-item {
+    font-size: 1.125rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.schedule-item:last-child {
+    border-bottom: none;
+}
+
+.schedule-item .name {
+    font-weight: 600;
+}
+
+/* 관리 화면 스타일 */
+.add-child-btn-container {
+    background: #FDE68A;
+    color: black;
+    border-radius: 0 0 1rem 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.add-child-btn {
+    width: 100%;
+    font-size: 1.25rem;
+    font-weight: bold;
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.children-list {
+    background: white;
+    color: black;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.child-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.child-item:last-child {
+    border-bottom: none;
+}
+
+.child-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.child-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.edit-btn {
+    padding: 0.5rem 1rem;
+    background-color: #10B981;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.delete-btn {
+    padding: 0.5rem 1rem;
+    background-color: #EF4444;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 아이 추가/수정 화면 스타일 */
+.add-child-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #A78BFA, #8B5CF6);
+    padding: 1rem;
+}
+
+.form-container {
+    background: #FDE68A;
+    color: black;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.125rem;
+    border: 2px solid #D1D5DB;
+    border-radius: 0.5rem;
+    background: white;
+}
+
+.form-group input:disabled {
+    background-color: #F3F4F6;
+    color: #6B7280;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.cancel-btn {
+    flex: 1;
+    padding: 1rem;
+    background-color: #EF4444;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.save-btn {
+    flex: 1;
+    padding: 1rem;
+    background-color: #7C3AED;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 모바일 터치 최적화 */
+@media (max-width: 480px) {
+    .main-btn {
+        padding: 2rem;
+        font-size: 2rem;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .datetime-box {
+        padding: 1rem;
+    }
+    
+    .date-text {
+        font-size: 1.25rem;
+    }
+    
+    .time-text {
+        font-size: 1rem;
+    }
+}
+
+/* PWA 관련 스타일 */
+@media (display-mode: standalone) {
+    body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
