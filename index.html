@@ -159,6 +159,25 @@
         </div>
     </div>
 
+    <!-- 커스텀 팝업창 -->
+    <div id="customAlert" class="custom-alert-overlay">
+        <div class="custom-alert-box">
+            <div class="custom-alert-message" id="alertMessage"></div>
+            <button class="custom-alert-btn" onclick="closeCustomAlert()">확인</button>
+        </div>
+    </div>
+
+    <!-- 커스텀 확인창 -->
+    <div id="customConfirm" class="custom-alert-overlay">
+        <div class="custom-alert-box">
+            <div class="custom-alert-message" id="confirmMessage"></div>
+            <div class="custom-confirm-buttons">
+                <button class="custom-alert-btn cancel" onclick="closeCustomConfirm(false)">취소</button>
+                <button class="custom-alert-btn confirm" onclick="closeCustomConfirm(true)">확인</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
