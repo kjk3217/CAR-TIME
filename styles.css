@@ -67,11 +67,6 @@ body {
     font-weight: 600;
 }
 
-.time-text {
-    font-size: 1.25rem;
-    margin-top: 0.5rem;
-}
-
 .button-container {
     flex: 1;
     display: flex;
@@ -263,6 +258,8 @@ body {
 .update-btn:hover {
     background-color: #059669;
 }
+
+/* 관리 화면 스타일 */
 .add-child-btn-container {
     background: #FDE68A;
     color: black;
@@ -417,10 +414,6 @@ body {
     
     .date-text {
         font-size: 1.25rem;
-    }
-    
-    .time-text {
-        font-size: 1rem;
     }
 }
 
