@@ -1,16 +1,5 @@
 // 전역 변수
-let children = [
-    { id: 1, name: '김상수', pickupTime: '08:30', dropoffTime: '08:30', pickupLocation: '아파트', dropoffLocation: '아파트' },
-    { id: 2, name: '박지우', pickupTime: '08:35', dropoffTime: '08:35', pickupLocation: '202동', dropoffLocation: '202동' },
-    { id: 3, name: '김태한', pickupTime: '08:40', dropoffTime: '08:40', pickupLocation: '302', dropoffLocation: '302' },
-    { id: 4, name: '송소영', pickupTime: '08:47', dropoffTime: '08:47', pickupLocation: '놀이터', dropoffLocation: '놀이터' },
-    { id: 5, name: '김동원', pickupTime: '08:50', dropoffTime: '08:50', pickupLocation: '101', dropoffLocation: '101' },
-    { id: 6, name: '강창희', pickupTime: '08:55', dropoffTime: '08:55', pickupLocation: '102', dropoffLocation: '102' },
-    { id: 7, name: '김준우', pickupTime: '08:57', dropoffTime: '08:57', pickupLocation: '우체국', dropoffLocation: '우체국' },
-    { id: 8, name: '장상현', pickupTime: '08:59', dropoffTime: '08:59', pickupLocation: '아파트', dropoffLocation: '아파트' },
-    { id: 9, name: '김일우', pickupTime: '08:59', dropoffTime: '08:59', pickupLocation: '402', dropoffLocation: '402' },
-    { id: 10, name: '김한범', pickupTime: '09:00', dropoffTime: '09:00', pickupLocation: '사거리', dropoffLocation: '사거리' }
-];
+let children = [];
 
 // 출발 시간 저장 (메모리)
 let departureTimes = {
@@ -21,6 +10,46 @@ let departureTimes = {
 let isEditing = false;
 let editingId = null;
 let confirmCallback = null;
+
+// 로컬스토리지에서 데이터 불러오기
+function loadData() {
+    // 아이 데이터 불러오기
+    const savedChildren = localStorage.getItem('summerhill_children');
+    if (savedChildren) {
+        children = JSON.parse(savedChildren);
+    } else {
+        // 초기 데이터 (최초 실행시에만)
+        children = [
+            { id: 1, name: '김상수', pickupTime: '08:30', dropoffTime: '08:30', pickupLocation: '아파트', dropoffLocation: '아파트' },
+            { id: 2, name: '박지우', pickupTime: '08:35', dropoffTime: '08:35', pickupLocation: '202동', dropoffLocation: '202동' },
+            { id: 3, name: '김태한', pickupTime: '08:40', dropoffTime: '08:40', pickupLocation: '302', dropoffLocation: '302' },
+            { id: 4, name: '송소영', pickupTime: '08:47', dropoffTime: '08:47', pickupLocation: '놀이터', dropoffLocation: '놀이터' },
+            { id: 5, name: '김동원', pickupTime: '08:50', dropoffTime: '08:50', pickupLocation: '101', dropoffLocation: '101' },
+            { id: 6, name: '강창희', pickupTime: '08:55', dropoffTime: '08:55', pickupLocation: '102', dropoffLocation: '102' },
+            { id: 7, name: '김준우', pickupTime: '08:57', dropoffTime: '08:57', pickupLocation: '우체국', dropoffLocation: '우체국' },
+            { id: 8, name: '장상현', pickupTime: '08:59', dropoffTime: '08:59', pickupLocation: '아파트', dropoffLocation: '아파트' },
+            { id: 9, name: '김일우', pickupTime: '08:59', dropoffTime: '08:59', pickupLocation: '402', dropoffLocation: '402' },
+            { id: 10, name: '김한범', pickupTime: '09:00', dropoffTime: '09:00', pickupLocation: '사거리', dropoffLocation: '사거리' }
+        ];
+        saveChildren();
+    }
+    
+    // 출발시간 불러오기
+    const savedDepartureTimes = localStorage.getItem('summerhill_departure_times');
+    if (savedDepartureTimes) {
+        departureTimes = JSON.parse(savedDepartureTimes);
+    }
+}
+
+// 아이 데이터를 로컬스토리지에 저장
+function saveChildren() {
+    localStorage.setItem('summerhill_children', JSON.stringify(children));
+}
+
+// 출발시간을 로컬스토리지에 저장
+function saveDepartureTimes() {
+    localStorage.setItem('summerhill_departure_times', JSON.stringify(departureTimes));
+}
 
 // 커스텀 알림창 함수
 function showCustomAlert(message) {
@@ -49,6 +78,9 @@ function closeCustomConfirm(result) {
 
 // DOM이 로드된 후 실행
 document.addEventListener('DOMContentLoaded', function() {
+    // 저장된 데이터 불러오기
+    loadData();
+    
     // 이벤트 리스너 등록
     setupEventListeners();
     
@@ -120,6 +152,7 @@ function updateDepartureTime(type) {
     
     if (newTime) {
         departureTimes[type] = newTime;
+        saveDepartureTimes(); // 저장
         updateDepartureDisplays();
         showCustomAlert(`${type === 'pickup' ? '등원' : '하원'} 출발시간이 ${newTime}로 변경되었습니다.`);
     }
@@ -231,6 +264,7 @@ function deleteChild(id) {
     showCustomConfirm('정말로 삭제하시겠습니까?', function(result) {
         if (result) {
             children = children.filter(child => child.id !== id);
+            saveChildren(); // 저장
             renderChildrenList();
         }
     });
@@ -304,6 +338,7 @@ function saveChild() {
                 dropoffLocation
             };
         }
+        saveChildren(); // 저장
         showCustomAlert('아이 정보가 수정되었습니다.');
     } else {
         // 새로 추가
@@ -316,6 +351,7 @@ function saveChild() {
             dropoffLocation
         };
         children.push(newChild);
+        saveChildren(); // 저장
         showCustomAlert('새 아이가 추가되었습니다.');
     }
     
