@@ -253,7 +253,7 @@ function saveChild() {
 // 서비스 워커 등록 (PWA 기능)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('./sw.js')
             .then(function(registration) {
                 console.log('ServiceWorker registration successful');
             }, function(err) {
