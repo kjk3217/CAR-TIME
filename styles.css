@@ -27,10 +27,20 @@ body {
 .screen {
     display: none;
     min-height: 100vh;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease-in-out;
 }
 
 .screen.active {
     display: block;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.screen.slide-out {
+    opacity: 0;
+    transform: translateX(-100%);
 }
 
 /* 메인 화면 스타일 */
@@ -74,8 +84,39 @@ body {
     font-weight: bold;
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+    position: relative;
+    overflow: hidden;
+}
+
+.main-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.main-btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.main-btn:active {
+    transform: translateY(2px) scale(0.98);
+    box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.2);
+}
+
+.main-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px -3px rgba(0, 0, 0, 0.2);
 }
 
 .pickup-btn {
@@ -162,6 +203,18 @@ body {
     font-size: 1.25rem;
     font-weight: bold;
     cursor: pointer;
+    transition: all 0.2s ease;
+    transform: scale(1);
+}
+
+.close-btn:active {
+    transform: scale(0.9);
+    background-color: #EA580C;
+}
+
+.close-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(249, 115, 22, 0.4);
 }
 
 .departure-info {
@@ -249,10 +302,17 @@ body {
     font-size: 0.875rem;
     font-weight: bold;
     cursor: pointer;
+    transition: all 0.2s ease;
+    transform: scale(1);
 }
 
 .update-btn:hover {
     background-color: #059669;
+}
+
+.update-btn:active {
+    transform: scale(0.95);
+    background-color: #047857;
 }
 
 /* 관리 화면 스타일 */
@@ -272,6 +332,13 @@ body {
     background: transparent;
     border: none;
     cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 0.5rem;
+}
+
+.add-child-btn:active {
+    transform: scale(0.98);
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .children-list {
@@ -312,6 +379,18 @@ body {
     font-size: 0.875rem;
     font-weight: bold;
     cursor: pointer;
+    transition: all 0.2s ease;
+    transform: scale(1);
+}
+
+.edit-btn:active {
+    transform: scale(0.95);
+    background-color: #059669;
+}
+
+.edit-btn:hover {
+    background-color: #059669;
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
 }
 
 .delete-btn {
@@ -323,6 +402,18 @@ body {
     font-size: 0.875rem;
     font-weight: bold;
     cursor: pointer;
+    transition: all 0.2s ease;
+    transform: scale(1);
+}
+
+.delete-btn:active {
+    transform: scale(0.95);
+    background-color: #DC2626;
+}
+
+.delete-btn:hover {
+    background-color: #DC2626;
+    box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
 }
 
 /* 아이 추가/수정 화면 스타일 */
@@ -379,6 +470,13 @@ body {
     font-size: 1.25rem;
     font-weight: bold;
     cursor: pointer;
+    transition: all 0.2s ease;
+    transform: scale(1);
+}
+
+.cancel-btn:active {
+    transform: scale(0.98);
+    background-color: #DC2626;
 }
 
 .save-btn {
@@ -391,6 +489,13 @@ body {
     font-size: 1.25rem;
     font-weight: bold;
     cursor: pointer;
+    transition: all 0.2s ease;
+    transform: scale(1);
+}
+
+.save-btn:active {
+    transform: scale(0.98);
+    background-color: #6D28D9;
 }
 
 /* 모바일 터치 최적화 */
@@ -410,5 +515,154 @@ body {
     body {
         padding-top: env(safe-area-inset-top);
         padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* 커스텀 팝업창 스타일 */
+.custom-alert-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-alert-overlay.show {
+    display: flex;
+}
+
+.custom-alert-box {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 350px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: alertSlideIn 0.3s ease-out;
+}
+
+@keyframes alertSlideIn {
+    from {
+        transform: scale(0.8) translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.custom-alert-message {
+    font-size: 1.375rem; /* 22px */
+    font-weight: 600;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.custom-alert-btn {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1.25rem; /* 20px */
+    font-weight: 600;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-alert-btn:not(.cancel):not(.confirm) {
+    background-color: #8B5CF6;
+    color: white;
+}
+
+.custom-alert-btn:not(.cancel):not(.confirm):hover {
+    background-color: #7C3AED;
+    transform: translateY(-1px);
+}
+
+.custom-confirm-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.custom-confirm-buttons .custom-alert-btn {
+    width: 50%;
+}
+
+.custom-alert-btn.cancel {
+    background-color: #6B7280;
+    color: white;
+}
+
+.custom-alert-btn.cancel:hover {
+    background-color: #4B5563;
+}
+
+.custom-alert-btn.confirm {
+    background-color: #EF4444;
+    color: white;
+}
+
+.custom-alert-btn:not(.cancel):not(.confirm):active {
+    background-color: #6D28D9;
+    transform: scale(0.98);
+}
+
+.custom-alert-btn.cancel:active {
+    background-color: #374151;
+    transform: scale(0.98);
+}
+
+.custom-alert-btn.confirm:active {
+    background-color: #B91C1C;
+    transform: scale(0.98);
+}
+
+/* 터치 피드백 효과 */
+.btn-feedback {
+    animation: btnPress 0.15s ease;
+}
+
+@keyframes btnPress {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+/* 페이지 전환 애니메이션 */
+.page-enter {
+    animation: slideInRight 0.3s ease-out;
+}
+
+.page-exit {
+    animation: slideOutLeft 0.3s ease-in;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutLeft {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
     }
 }
