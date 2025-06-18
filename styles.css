@@ -54,19 +54,6 @@ body {
     margin-bottom: 2rem;
 }
 
-.datetime-box {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-}
-
-.date-text {
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
 .button-container {
     flex: 1;
     display: flex;
@@ -406,14 +393,6 @@ body {
     
     .header h1 {
         font-size: 2rem;
-    }
-    
-    .datetime-box {
-        padding: 1rem;
-    }
-    
-    .date-text {
-        font-size: 1.25rem;
     }
 }
 
