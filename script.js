@@ -99,6 +99,8 @@ function updateDepartureTime(type) {
         alert(`${type === 'pickup' ? '등원' : '하원'} 출발시간이 ${newTime}로 변경되었습니다.`);
     }
 }
+
+// 화면 전환
 function showScreen(screenId) {
     // 모든 화면 숨기기
     const screens = document.querySelectorAll('.screen');
