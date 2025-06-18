@@ -137,10 +137,10 @@ function updateDepartureDisplays() {
     const dropoffDisplay = document.getElementById('dropoffDepartureDisplay');
     
     if (pickupDisplay) {
-        pickupDisplay.textContent = `출발 오전 ${departureTimes.pickup}`;
+        pickupDisplay.textContent = `출발 ${departureTimes.pickup}`;
     }
     if (dropoffDisplay) {
-        dropoffDisplay.textContent = `출발 오전 ${departureTimes.dropoff}`;
+        dropoffDisplay.textContent = `출발 ${departureTimes.dropoff}`;
     }
 }
 
@@ -206,7 +206,7 @@ function renderSchedule(type) {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'schedule-item';
         itemDiv.innerHTML = `
-            <span class="name">${child.name}</span> 오전 ${child[timeKey]} <span class="name">${child[locationKey]}</span>
+            <span class="name">${child.name}</span> ${child[timeKey]} <span class="name">${child[locationKey]}</span>
         `;
         listElement.appendChild(itemDiv);
     });
