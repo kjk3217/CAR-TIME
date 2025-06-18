@@ -12,15 +12,17 @@ body {
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
+    overflow-x: hidden;
+    position: relative;
 }
 
-.max-w-md {
+#app {
     max-width: 28rem;
-}
-
-.mx-auto {
     margin-left: auto;
     margin-right: auto;
+    position: relative;
+    overflow-x: hidden;
+    min-height: 100vh;
 }
 
 /* 화면 전환 관련 스타일 */
@@ -30,6 +32,8 @@ body {
     opacity: 0;
     transform: translateX(100%);
     transition: all 0.3s ease-in-out;
+    overflow-x: hidden;
+    position: relative;
 }
 
 .screen.active {
