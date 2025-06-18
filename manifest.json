@@ -1,6 +1,6 @@
 {
   "name": "서머힐 차량 시간표",
-  "short_name": "서머힐시간표",
+  "short_name": "시간표",
   "description": "어린이집 차량 시간표 관리 앱",
   "start_url": "./",
   "scope": "./",
