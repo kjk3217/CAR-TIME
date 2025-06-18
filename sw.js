@@ -1,10 +1,10 @@
 const CACHE_NAME = 'summerhill-schedule-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/script.js',
-  '/manifest.json'
+  './',
+  './index.html',
+  './styles.css',
+  './script.js',
+  './manifest.json'
 ];
 
 // 서비스 워커 설치
