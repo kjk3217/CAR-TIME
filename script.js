@@ -148,14 +148,24 @@ function updateDepartureDisplays() {
 function updateDepartureTime(type) {
     const inputId = type === 'pickup' ? 'pickupDepartureInput' : 'dropoffDepartureInput';
     const inputElement = document.getElementById(inputId);
-    const newTime = inputElement.value;
+    const newTime = inputElement.value.trim();
     
-    if (newTime) {
-        departureTimes[type] = newTime;
-        saveDepartureTimes(); // 저장
-        updateDepartureDisplays();
-        showCustomAlert(`${type === 'pickup' ? '등원' : '하원'} 출발시간이 ${newTime}로 변경되었습니다.`);
+    if (!newTime) {
+        showCustomAlert('시간을 입력해주세요.');
+        return;
     }
+    
+    // 시간 형식 검증
+    const timePattern = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+    if (!timePattern.test(newTime)) {
+        showCustomAlert('올바른 시간 형식으로 입력해주세요.\n예: 08:30');
+        return;
+    }
+    
+    departureTimes[type] = newTime;
+    saveDepartureTimes(); // 저장
+    updateDepartureDisplays();
+    showCustomAlert(`${type === 'pickup' ? '등원' : '하원'} 출발시간이 ${newTime}로 변경되었습니다.`);
 }
 
 // 화면 전환 (애니메이션 추가)
