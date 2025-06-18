@@ -173,7 +173,7 @@ function renderSchedule(type) {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'schedule-item';
         itemDiv.innerHTML = `
-            <span class="name">${child.name}</span> 오전 ${child[timeKey]} ${child[locationKey]}
+            <span class="name">${child.name}</span> 오전 ${child[timeKey]} <span class="name">${child[locationKey]}</span>
         `;
         listElement.appendChild(itemDiv);
     });
