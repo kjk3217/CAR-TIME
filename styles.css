@@ -192,7 +192,7 @@ body {
     background: white;
     color: black;
     border-radius: 1rem 1rem 0 0;
-    padding: 1rem;
+    padding: 0.8rem;
     margin-bottom: 0.5rem;
     display: flex;
     justify-content: space-between;
@@ -236,7 +236,7 @@ body {
     background: #FEF3C7;
     color: black;
     border-radius: 0 0 1rem 1rem;
-    padding: 1rem;
+    padding: 0.8rem;
     margin-bottom: 1rem;
 }
 
