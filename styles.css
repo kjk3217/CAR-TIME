@@ -281,7 +281,7 @@ body {
 .departure-setting label {
     font-size: 1.75rem; /* 28px */
     font-weight: 600;
-    min-width: 120px;
+    min-width: 80px;
 }
 
 .departure-setting input {
