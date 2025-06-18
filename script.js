@@ -361,7 +361,7 @@ function saveChild() {
             };
         }
         saveChildren(); // 저장
-        showCustomAlert('아이 정보가 수정되었습니다.');
+        showCustomAlert('수정완료');
     } else {
         // 새로 추가
         const newChild = {
