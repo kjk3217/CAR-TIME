@@ -253,7 +253,7 @@ body {
 }
 
 .schedule-item {
-    font-size: 1.875rem; /* 30px */
+    font-size: 2rem; /* 32px */
     padding: 0.625rem 0; /* 10px */
     border-bottom: 1px solid #E5E7EB;
     line-height: 1.2;
