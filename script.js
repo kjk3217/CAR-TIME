@@ -294,9 +294,9 @@ function cancelForm() {
 // 아이 저장
 function saveChild() {
     const name = document.getElementById('childName').value.trim();
-    const pickupTime = document.getElementById('pickupTime').value;
+    const pickupTime = document.getElementById('pickupTime').value.trim();
     const pickupLocation = document.getElementById('pickupLocation').value.trim();
-    const dropoffTime = document.getElementById('dropoffTime').value;
+    const dropoffTime = document.getElementById('dropoffTime').value.trim();
     const dropoffLocation = document.getElementById('dropoffLocation').value.trim();
     
     // 유효성 검사
@@ -306,7 +306,7 @@ function saveChild() {
     }
     
     if (!pickupTime) {
-        showCustomAlert('등원 시간을 선택해주세요.');
+        showCustomAlert('등원 시간을 입력해주세요.');
         return;
     }
     
@@ -316,12 +316,24 @@ function saveChild() {
     }
     
     if (!dropoffTime) {
-        showCustomAlert('하원 시간을 선택해주세요.');
+        showCustomAlert('하원 시간을 입력해주세요.');
         return;
     }
     
     if (!dropoffLocation) {
         showCustomAlert('하원 장소를 입력해주세요.');
+        return;
+    }
+    
+    // 시간 형식 간단 검증 (선택적)
+    const timePattern = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+    if (!timePattern.test(pickupTime)) {
+        showCustomAlert('등원 시간을 올바른 형식으로 입력해주세요.\n예: 08:30');
+        return;
+    }
+    
+    if (!timePattern.test(dropoffTime)) {
+        showCustomAlert('하원 시간을 올바른 형식으로 입력해주세요.\n예: 14:30');
         return;
     }
     
