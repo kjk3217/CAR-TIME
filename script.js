@@ -12,20 +12,26 @@ let children = [
     { id: 10, name: '김한범', pickupTime: '09:00', dropoffTime: '09:00', pickupLocation: '사거리', dropoffLocation: '사거리' }
 ];
 
+// 출발 시간 저장 (메모리)
+let departureTimes = {
+    pickup: '08:30',
+    dropoff: '14:30'
+};
+
 let isEditing = false;
 let editingId = null;
 
 // DOM이 로드된 후 실행
 document.addEventListener('DOMContentLoaded', function() {
-    // 시간 업데이트
+    // 날짜 업데이트
     updateDateTime();
-    setInterval(updateDateTime, 1000);
     
     // 이벤트 리스너 등록
     setupEventListeners();
     
     // 초기 데이터 렌더링
     renderChildrenList();
+    updateDepartureDisplays();
 });
 
 // 이벤트 리스너 설정
@@ -51,7 +57,7 @@ function setupEventListeners() {
     });
 }
 
-// 현재 날짜와 시간 업데이트
+// 현재 날짜 업데이트 (시간 제거)
 function updateDateTime() {
     const now = new Date();
     
@@ -64,25 +70,35 @@ function updateDateTime() {
     
     const dateString = `${year}.${month}.${date} (${day})`;
     
-    // 시간 포맷
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const timeString = `오전 ${hours}:${minutes}`;
-    
     // DOM 업데이트
     document.getElementById('currentDate').textContent = dateString;
-    document.getElementById('currentTime').textContent = timeString;
-    
-    // 출발 시간도 업데이트
-    const departureTimeElements = document.querySelectorAll('#pickupDepartureTime, #dropoffDepartureTime');
-    departureTimeElements.forEach(element => {
-        if (element) {
-            element.textContent = timeString;
-        }
-    });
 }
 
-// 화면 전환
+// 출발 시간 표시 업데이트
+function updateDepartureDisplays() {
+    const pickupDisplay = document.getElementById('pickupDepartureDisplay');
+    const dropoffDisplay = document.getElementById('dropoffDepartureDisplay');
+    
+    if (pickupDisplay) {
+        pickupDisplay.textContent = `출발 오전 ${departureTimes.pickup}`;
+    }
+    if (dropoffDisplay) {
+        dropoffDisplay.textContent = `출발 오전 ${departureTimes.dropoff}`;
+    }
+}
+
+// 출발 시간 업데이트
+function updateDepartureTime(type) {
+    const inputId = type === 'pickup' ? 'pickupDepartureInput' : 'dropoffDepartureInput';
+    const inputElement = document.getElementById(inputId);
+    const newTime = inputElement.value;
+    
+    if (newTime) {
+        departureTimes[type] = newTime;
+        updateDepartureDisplays();
+        alert(`${type === 'pickup' ? '등원' : '하원'} 출발시간이 ${newTime}로 변경되었습니다.`);
+    }
+}
 function showScreen(screenId) {
     // 모든 화면 숨기기
     const screens = document.querySelectorAll('.screen');
@@ -131,6 +147,12 @@ function renderChildrenList() {
         `;
         listElement.appendChild(itemDiv);
     });
+    
+    // 출발 시간 입력 필드 초기화
+    const pickupInput = document.getElementById('pickupDepartureInput');
+    const dropoffInput = document.getElementById('dropoffDepartureInput');
+    if (pickupInput) pickupInput.value = departureTimes.pickup;
+    if (dropoffInput) dropoffInput.value = departureTimes.dropoff;
 }
 
 // 아이 편집
