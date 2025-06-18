@@ -20,6 +20,32 @@ let departureTimes = {
 
 let isEditing = false;
 let editingId = null;
+let confirmCallback = null;
+
+// 커스텀 알림창 함수
+function showCustomAlert(message) {
+    document.getElementById('alertMessage').textContent = message;
+    document.getElementById('customAlert').classList.add('show');
+}
+
+function closeCustomAlert() {
+    document.getElementById('customAlert').classList.remove('show');
+}
+
+// 커스텀 확인창 함수
+function showCustomConfirm(message, callback) {
+    document.getElementById('confirmMessage').textContent = message;
+    confirmCallback = callback;
+    document.getElementById('customConfirm').classList.add('show');
+}
+
+function closeCustomConfirm(result) {
+    document.getElementById('customConfirm').classList.remove('show');
+    if (confirmCallback) {
+        confirmCallback(result);
+        confirmCallback = null;
+    }
+}
 
 // DOM이 로드된 후 실행
 document.addEventListener('DOMContentLoaded', function() {
@@ -33,24 +59,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 이벤트 리스너 설정
 function setupEventListeners() {
-    document.getElementById('pickupBtn').addEventListener('click', () => {
-        renderSchedule('pickup');
-        showScreen('pickupScreen');
+    document.getElementById('pickupBtn').addEventListener('click', (e) => {
+        addButtonFeedback(e);
+        setTimeout(() => {
+            renderSchedule('pickup');
+            showScreen('pickupScreen');
+        }, 100);
     });
     
-    document.getElementById('dropoffBtn').addEventListener('click', () => {
-        renderSchedule('dropoff');
-        showScreen('dropoffScreen');
+    document.getElementById('dropoffBtn').addEventListener('click', (e) => {
+        addButtonFeedback(e);
+        setTimeout(() => {
+            renderSchedule('dropoff');
+            showScreen('dropoffScreen');
+        }, 100);
     });
     
-    document.getElementById('manageBtn').addEventListener('click', () => {
-        renderChildrenList();
-        showScreen('manageScreen');
+    document.getElementById('manageBtn').addEventListener('click', (e) => {
+        addButtonFeedback(e);
+        setTimeout(() => {
+            renderChildrenList();
+            showScreen('manageScreen');
+        }, 100);
     });
     
-    document.getElementById('addChildBtn').addEventListener('click', () => {
-        resetForm();
-        showScreen('addChildScreen');
+    document.getElementById('addChildBtn').addEventListener('click', (e) => {
+        addButtonFeedback(e);
+        setTimeout(() => {
+            resetForm();
+            showScreen('addChildScreen');
+        }, 100);
+    });
+    
+    // 모든 버튼에 터치 피드백 추가
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName === 'BUTTON' && !e.target.classList.contains('main-btn')) {
+            addButtonFeedback(e);
+        }
     });
 }
 
@@ -76,18 +121,40 @@ function updateDepartureTime(type) {
     if (newTime) {
         departureTimes[type] = newTime;
         updateDepartureDisplays();
-        alert(`${type === 'pickup' ? '등원' : '하원'} 출발시간이 ${newTime}로 변경되었습니다.`);
+        showCustomAlert(`${type === 'pickup' ? '등원' : '하원'} 출발시간이 ${newTime}로 변경되었습니다.`);
     }
 }
 
-// 화면 전환
+// 화면 전환 (애니메이션 추가)
 function showScreen(screenId) {
-    // 모든 화면 숨기기
-    const screens = document.querySelectorAll('.screen');
-    screens.forEach(screen => screen.classList.remove('active'));
+    const currentScreen = document.querySelector('.screen.active');
+    const targetScreen = document.getElementById(screenId);
     
-    // 선택된 화면 보이기
-    document.getElementById(screenId).classList.add('active');
+    // 현재 화면 페이드 아웃
+    if (currentScreen) {
+        currentScreen.classList.add('slide-out');
+        setTimeout(() => {
+            currentScreen.classList.remove('active', 'slide-out');
+        }, 300);
+    }
+    
+    // 새 화면 페이드 인
+    setTimeout(() => {
+        targetScreen.classList.add('active');
+        targetScreen.classList.add('page-enter');
+        setTimeout(() => {
+            targetScreen.classList.remove('page-enter');
+        }, 300);
+    }, 150);
+}
+
+// 버튼 터치 피드백 추가
+function addButtonFeedback(event) {
+    const button = event.target;
+    button.classList.add('btn-feedback');
+    setTimeout(() => {
+        button.classList.remove('btn-feedback');
+    }, 150);
 }
 
 // 시간표 렌더링
@@ -161,10 +228,12 @@ function editChild(id) {
 
 // 아이 삭제
 function deleteChild(id) {
-    if (confirm('정말로 삭제하시겠습니까?')) {
-        children = children.filter(child => child.id !== id);
-        renderChildrenList();
-    }
+    showCustomConfirm('정말로 삭제하시겠습니까?', function(result) {
+        if (result) {
+            children = children.filter(child => child.id !== id);
+            renderChildrenList();
+        }
+    });
 }
 
 // 폼 리셋
@@ -198,27 +267,27 @@ function saveChild() {
     
     // 유효성 검사
     if (!name) {
-        alert('이름을 입력해주세요.');
+        showCustomAlert('이름을 입력해주세요.');
         return;
     }
     
     if (!pickupTime) {
-        alert('등원 시간을 선택해주세요.');
+        showCustomAlert('등원 시간을 선택해주세요.');
         return;
     }
     
     if (!pickupLocation) {
-        alert('등원 장소를 입력해주세요.');
+        showCustomAlert('등원 장소를 입력해주세요.');
         return;
     }
     
     if (!dropoffTime) {
-        alert('하원 시간을 선택해주세요.');
+        showCustomAlert('하원 시간을 선택해주세요.');
         return;
     }
     
     if (!dropoffLocation) {
-        alert('하원 장소를 입력해주세요.');
+        showCustomAlert('하원 장소를 입력해주세요.');
         return;
     }
     
@@ -235,6 +304,7 @@ function saveChild() {
                 dropoffLocation
             };
         }
+        showCustomAlert('아이 정보가 수정되었습니다.');
     } else {
         // 새로 추가
         const newChild = {
@@ -246,6 +316,7 @@ function saveChild() {
             dropoffLocation
         };
         children.push(newChild);
+        showCustomAlert('새 아이가 추가되었습니다.');
     }
     
     // 폼 리셋하고 관리 화면으로 이동
