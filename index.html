@@ -22,7 +22,6 @@
                     <h1>서머힐 차량 시간표</h1>
                     <div class="datetime-box">
                         <div id="currentDate" class="date-text"></div>
-                        <div id="currentTime" class="time-text"></div>
                     </div>
                 </div>
                 
@@ -55,7 +54,7 @@
                 </div>
                 
                 <div class="departure-info">
-                    <div>출발 <span id="pickupDepartureTime"></span></div>
+                    <div id="pickupDepartureDisplay">출발 오전 08:30</div>
                 </div>
                 
                 <div id="pickupList" class="schedule-list">
@@ -73,7 +72,7 @@
                 </div>
                 
                 <div class="departure-info">
-                    <div>출발 <span id="dropoffDepartureTime"></span></div>
+                    <div id="dropoffDepartureDisplay">출발 오전 14:30</div>
                 </div>
                 
                 <div id="dropoffList" class="schedule-list">
@@ -94,6 +93,20 @@
                     <button id="addChildBtn" class="add-child-btn">
                         + 아이 추가
                     </button>
+                </div>
+                
+                <div class="departure-time-settings">
+                    <h3>출발 시간 설정</h3>
+                    <div class="departure-setting">
+                        <label>등원 출발시간</label>
+                        <input type="time" id="pickupDepartureInput" value="08:30">
+                        <button onclick="updateDepartureTime('pickup')" class="update-btn">저장</button>
+                    </div>
+                    <div class="departure-setting">
+                        <label>하원 출발시간</label>
+                        <input type="time" id="dropoffDepartureInput" value="14:30">
+                        <button onclick="updateDepartureTime('dropoff')" class="update-btn">저장</button>
+                    </div>
                 </div>
                 
                 <div id="childrenList" class="children-list">
